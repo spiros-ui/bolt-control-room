@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control | Task Management</title>
+    <script src="auth.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f6f8;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Layout */
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr 350px;
+            grid-template-rows: 60px 1fr;
+            height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            grid-column: 1 / -1;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+        }
+        .btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 1px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #f9fafb;
+        }
+        
+        /* Agents Sidebar */
+        .agents-sidebar {
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+        .agent-item {
+            padding: 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: grab;
+            transition: all 0.2s;
+        }
+        .agent-item:hover {
+            background: #f3f4f6;
+            transform: translateX(4px);
+        }
+        .agent-item:active {
+            cursor: grabbing;
+        }
+        .agent-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        .agent-status {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .status-dot.active { background: #10b981; }
+        .status-dot.building { background: #f59e0b; }
+        
+        /* Kanban Board */
+        .board {
+            padding: 20px;
+            overflow-x: auto;
+            overflow-y: auto;
+        }
+        .board-columns {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            min-height: calc(100vh - 120px);
+        }
+        .column {
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 16px;
+            min-height: 400px;
+        }
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .column-title {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .column-count {
+            background: #e5e7eb;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .column-content {
+            min-height: 300px;
+            border: 2px dashed transparent;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .column-content.drag-over {
+            border-color: #667eea;
+            background: #ede9fe;
+        }
+        
+        /* Task Cards */
+        .task-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .task-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .task-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        .task-desc {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 12px;
+        }
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-agent {
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 600;
+        }
+        .task-priority {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .priority-high {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        .priority-normal {
+            background: #e0e7ff;
+            color: #3730a3;
+        }
+        
+        /* Live Feed */
+        .live-feed {
+            background: white;
+            border-left: 1px solid #e5e7eb;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .feed-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+        .feed-item {
+            padding: 12px;
+            background: #f9fafb;
+            border-left: 3px solid #667eea;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+        .feed-time {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+        .feed-agent {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 4px;
+        }
+        .feed-message {
+            color: #1a1a1a;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: #1a1a1a;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">⚡ Mission Control</div>
+            <div class="header-actions">
+                <button class="btn" onclick="openTaskModal()">+ New Task</button>
+                <button class="btn-secondary btn" onclick="window.location.href='assets-gallery.html'">🎨 Assets</button>
+                <button class="btn-secondary btn" onclick="scrollToCostTracking()">💰 Cost Tracking</button>
+                <button class="btn-secondary btn" onclick="window.location.href='executive-summary.html'">📊 Summary</button>
+            </div>
+        </div>
+        
+        <!-- Agents Sidebar -->
+        <div class="agents-sidebar">
+            <div class="sidebar-title">🤖 Agents (6)</div>
+            <div id="agents-list">
+                <!-- Agents loaded via JS -->
+            </div>
+        </div>
+        
+        <!-- Kanban Board -->
+        <div class="board">
+            <div class="board-columns">
+                <div class="column">
+                    <div class="column-header">
+                        <span class="column-title">📥 Inbox</span>
+                        <span class="column-count" id="inbox-count">0</span>
+                    </div>
+                    <div class="column-content" data-status="inbox" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        <div id="inbox-tasks"></div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="column-header">
+                        <span class="column-title">👤 Assigned</span>
+                        <span class="column-count" id="assigned-count">0</span>
+                    </div>
+                    <div class="column-content" data-status="assigned" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        <div id="assigned-tasks"></div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="column-header">
+                        <span class="column-title">⚡ In Progress</span>
+                        <span class="column-count" id="in-progress-count">0</span>
+                    </div>
+                    <div class="column-content" data-status="in-progress" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        <div id="in-progress-tasks"></div>
+                    </div>
+                </div>
+                
+                <div class="column">
+                    <div class="column-header">
+                        <span class="column-title">✅ Done</span>
+                        <span class="column-count" id="done-count">0</span>
+                    </div>
+                    <div class="column-content" data-status="done" ondrop="drop(event)" ondragover="allowDrop(event)" ondragleave="dragLeave(event)">
+                        <div id="done-tasks"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Live Feed -->
+        <div class="live-feed">
+            <div class="feed-title">📡 Live Feed</div>
+            <div id="live-feed">
+                <!-- Feed loaded via JS -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Task Creation Modal -->
+    <div class="modal" id="task-modal">
+        <div class="modal-content">
+            <div class="modal-title">Create New Task</div>
+            <form id="task-form" onsubmit="createTask(event)">
+                <div class="form-group">
+                    <label class="form-label">Task Title</label>
+                    <input type="text" class="form-input" id="task-title" required placeholder="e.g., Build Google Ads integration">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="task-desc" placeholder="What needs to be done?"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Priority</label>
+                    <select class="form-select" id="task-priority">
+                        <option value="high">High</option>
+                        <option value="normal" selected>Normal</option>
+                        <option value="low">Low</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary btn" onclick="closeTaskModal()">Cancel</button>
+                    <button type="submit" class="btn">Create Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '138.68.161.145' 
+            ? 'http://138.68.161.145:8086/api' 
+            : '/api';
+        
+        const agents = [
+            { id: 1, name: 'AdWords Pro', fullName: 'Google Ads Specialist', status: 'building' },
+            { id: 2, name: 'Meta Maven', fullName: 'Meta Ads Specialist', status: 'building' },
+            { id: 3, name: 'Lead Hunter', fullName: 'Lead Gen Machine', status: 'active' },
+            { id: 5, name: 'News Scout', fullName: 'AI News Researcher', status: 'active' },
+            { id: 10, name: 'Inbox Ninja', fullName: 'Inbox Whisperer', status: 'building' },
+            { id: 11, name: 'Video Wizard', fullName: 'Creative Designer', status: 'active' }
+        ];
+        
+        // Load agents
+        function loadAgents() {
+            const container = document.getElementById('agents-list');
+            container.innerHTML = agents.map(agent => `
+                <div class="agent-item" draggable="true" ondragstart="dragAgent(event)" data-agent-id="${agent.id}" data-agent-name="${agent.name}">
+                    <div class="agent-name">
+                        <span class="status-dot ${agent.status}"></span>
+                        ${agent.name}
+                    </div>
+                    <div class="agent-status">${agent.fullName}</div>
+                </div>
+            `).join('');
+        }
+        
+        // Load tasks
+        async function loadTasks() {
+            try {
+                const response = await fetch(`${API_BASE}/tasks`);
+                const tasks = await response.json();
+                
+                // Clear columns
+                ['inbox', 'assigned', 'in-progress', 'done'].forEach(status => {
+                    document.getElementById(status + '-tasks').innerHTML = '';
+                });
+                
+                // Populate columns
+                tasks.forEach(task => {
+                    const taskHtml = createTaskCard(task);
+                    const columnId = task.status.replace('_', '-') + '-tasks';
+                    const column = document.getElementById(columnId);
+                    if (column) {
+                        column.innerHTML += taskHtml;
+                    }
+                });
+                
+                // Update counts
+                updateCounts(tasks);
+                
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+            }
+        }
+        
+        function createTaskCard(task) {
+            const progress = task.progress || 0;
+            const progressBar = progress > 0 ? `
+                <div style="width: 100%; height: 4px; background: #e5e7eb; border-radius: 2px; margin: 8px 0;">
+                    <div style="width: ${progress}%; height: 100%; background: #667eea; border-radius: 2px; transition: width 0.3s;"></div>
+                </div>
+            ` : '';
+            
+            return `
+                <div class="task-card" draggable="true" ondragstart="dragTask(event)" data-task-id="${task.id}">
+                    <div class="task-title">${task.title}</div>
+                    ${task.description ? `<div class="task-desc">${task.description}</div>` : ''}
+                    ${progressBar}
+                    <div class="task-footer">
+                        <div class="task-agent">${task.assignedAgent || 'Unassigned'}</div>
+                        <div class="task-priority priority-${task.priority || 'normal'}">${task.priority || 'normal'}</div>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function updateCounts(tasks) {
+            const counts = { inbox: 0, assigned: 0, 'in-progress': 0, done: 0 };
+            tasks.forEach(task => {
+                const status = task.status.replace('_', '-');
+                if (counts[status] !== undefined) counts[status]++;
+            });
+            
+            Object.keys(counts).forEach(status => {
+                document.getElementById(status + '-count').textContent = counts[status];
+            });
+        }
+        
+        // Load live feed
+        async function loadFeed() {
+            try {
+                const response = await fetch(`${API_BASE}/live-feed`);
+                const feed = await response.json();
+                
+                // Get recent tasks to show in feed
+                const tasksResponse = await fetch(`${API_BASE}/tasks`);
+                const tasksData = await tasksResponse.json();
+                const recentTasks = tasksData.filter(t => {
+                    const taskAge = Date.now() - new Date(t.createdAt).getTime();
+                    return taskAge < 300000 && t.status === 'inbox'; // Last 5 minutes, inbox only
+                });
+                
+                let feedHtml = '';
+                
+                // Add recent inbox tasks (draggable)
+                recentTasks.forEach(task => {
+                    feedHtml += `
+                        <div class="feed-item" draggable="true" ondragstart="dragNewTask(event)" data-task-id="${task.id}" style="cursor: move; border-left-color: #10b981;">
+                            <div class="feed-time">New Task</div>
+                            <div class="feed-agent">📥 ${task.title}</div>
+                            <div class="feed-message">Drag to Inbox to start →</div>
+                        </div>
+                    `;
+                });
+                
+                // Add regular feed events
+                feedHtml += feed.events.slice(0, 15).map(event => `
+                    <div class="feed-item">
+                        <div class="feed-time">${new Date(event.timestamp).toLocaleTimeString()}</div>
+                        <div class="feed-agent">${event.agent || event.fromAgent || 'System'}</div>
+                        <div class="feed-message">${event.message || event.action || event.content}</div>
+                    </div>
+                `).join('');
+                
+                document.getElementById('live-feed').innerHTML = feedHtml || '<div class="feed-item">No recent activity</div>';
+                
+            } catch (error) {
+                console.error('Error loading feed:', error);
+            }
+        }
+        
+        // Drag new task from feed
+        let draggedNewTaskId = null;
+        function dragNewTask(event) {
+            draggedNewTaskId = event.currentTarget.dataset.taskId;
+            event.dataTransfer.effectAllowed = 'move';
+        }
+        
+        // Drag & Drop
+        let draggedTaskId = null;
+        let draggedAgent = null;
+        
+        function dragAgent(event) {
+            draggedAgent = {
+                id: event.target.dataset.agentId,
+                name: event.target.dataset.agentName
+            };
+            event.dataTransfer.effectAllowed = 'copy';
+        }
+        
+        function dragTask(event) {
+            draggedTaskId = event.target.dataset.taskId;
+            event.dataTransfer.effectAllowed = 'move';
+        }
+        
+        function allowDrop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.add('drag-over');
+        }
+        
+        function dragLeave(event) {
+            event.currentTarget.classList.remove('drag-over');
+        }
+        
+        async function drop(event) {
+            event.preventDefault();
+            event.currentTarget.classList.remove('drag-over');
+            
+            const newStatus = event.currentTarget.dataset.status;
+            
+            if (draggedNewTaskId) {
+                // New task from feed dropped into inbox
+                if (newStatus === 'inbox') {
+                    // Task is already in inbox, just refresh
+                    await loadTasks();
+                    await loadFeed();
+                }
+                draggedNewTaskId = null;
+            } else if (draggedAgent) {
+                // Assign agent to task
+                const taskCard = event.target.closest('.task-card');
+                if (taskCard) {
+                    const taskId = taskCard.dataset.taskId;
+                    await assignAgentAndProgress(taskId, draggedAgent.name);
+                }
+                draggedAgent = null;
+            } else if (draggedTaskId) {
+                // Move task to new status
+                await updateTaskStatus(draggedTaskId, newStatus);
+                draggedTaskId = null;
+            }
+        }
+        
+        // Assign agent and auto-progress through stages
+        async function assignAgentAndProgress(taskId, agentName) {
+            try {
+                // 1. Assign agent + move to "assigned"
+                await fetch(`${API_BASE}/tasks/${taskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ assignedAgent: agentName, status: 'assigned' })
+                });
+                await loadTasks();
+                
+                // 2. Wait 2 seconds, move to "in-progress"
+                setTimeout(async () => {
+                    await fetch(`${API_BASE}/tasks/${taskId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ status: 'in-progress', progress: 25 })
+                    });
+                    await loadTasks();
+                    
+                    // 3. Wait 3 seconds, update progress
+                    setTimeout(async () => {
+                        await fetch(`${API_BASE}/tasks/${taskId}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ progress: 75 })
+                        });
+                        await loadTasks();
+                        
+                        // 4. Wait 2 seconds, move to "done"
+                        setTimeout(async () => {
+                            await fetch(`${API_BASE}/tasks/${taskId}`, {
+                                method: 'PUT',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ status: 'done', progress: 100 })
+                            });
+                            await loadTasks();
+                            await loadFeed();
+                        }, 2000);
+                    }, 3000);
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error in auto-progression:', error);
+            }
+        }
+        
+        async function assignAgent(taskId, agentName) {
+            try {
+                await fetch(`${API_BASE}/tasks/${taskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ assignedAgent: agentName, status: 'assigned' })
+                });
+                await loadTasks();
+            } catch (error) {
+                console.error('Error assigning agent:', error);
+            }
+        }
+        
+        async function updateTaskStatus(taskId, newStatus) {
+            try {
+                await fetch(`${API_BASE}/tasks/${taskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                await loadTasks();
+            } catch (error) {
+                console.error('Error updating status:', error);
+            }
+        }
+        
+        // Task Modal
+        function openTaskModal() {
+            document.getElementById('task-modal').classList.add('active');
+        }
+        
+        function closeTaskModal() {
+            document.getElementById('task-modal').classList.remove('active');
+            document.getElementById('task-form').reset();
+        }
+        
+        async function createTask(event) {
+            event.preventDefault();
+            
+            const task = {
+                title: document.getElementById('task-title').value,
+                description: document.getElementById('task-desc').value,
+                priority: document.getElementById('task-priority').value,
+                status: 'inbox'
+            };
+            
+            try {
+                await fetch(`${API_BASE}/tasks`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(task)
+                });
+                closeTaskModal();
+                await loadTasks();
+            } catch (error) {
+                console.error('Error creating task:', error);
+                alert('Failed to create task');
+            }
+        }
+        
+        // Initialize
+        loadAgents();
+        loadTasks();
+        loadFeed();
+        
+        // Auto-refresh
+        setInterval(() => {
+            loadTasks();
+            loadFeed();
+        }, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knowledge Centre - Control Room</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-light: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: var(--text-primary);
+            padding: 24px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 32px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+        
+        .guides {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+        
+        .guide-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .guide-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .guide-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 16px;
+        }
+        
+        .guide-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        
+        .guide-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 40px 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            max-width: 900px;
+            width: 100%;
+            margin: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 24px 32px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-header h2 {
+            font-size: 24px;
+            color: white;
+        }
+        
+        .close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+        
+        .modal-body {
+            padding: 32px;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .step {
+            background: var(--bg-light);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 14px;
+        }
+        
+        .step h4 {
+            display: inline-block;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+        
+        .step p {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding-left: 44px;
+        }
+        
+        .step ul {
+            padding-left: 60px;
+            color: var(--text-secondary);
+        }
+        
+        .step li {
+            margin-bottom: 8px;
+        }
+        
+        .code-block {
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #0f0;
+            margin: 12px 0;
+            overflow-x: auto;
+        }
+        
+        .warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 4px solid var(--warning);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .warning-icon {
+            display: inline-block;
+            color: var(--warning);
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        
+        .success {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid var(--success);
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+        
+        .success-icon {
+            display: inline-block;
+            color: var(--success);
+            font-weight: 700;
+            margin-right: 8px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        
+        .feature-item {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .feature-item h5 {
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: var(--primary);
+        }
+        
+        .feature-item p {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Knowledge Centre</h1>
+            <p>Step-by-step guides for OpenClaw and Control Room setup</p>
+        </div>
+        
+        <div class="guides">
+            <div class="guide-card" onclick="openGuide('openclaw')">
+                <div class="guide-icon">🚀</div>
+                <h3>OpenClaw Setup Guide</h3>
+                <p>Complete beginner walkthrough: DigitalOcean account creation → OpenClaw launch. Perfect for someone who has never used a server before.</p>
+            </div>
+            
+            <div class="guide-card" onclick="openGuide('controlroom')">
+                <div class="guide-icon">🎯</div>
+                <h3>Control Room Roadmap</h3>
+                <p>Build your own AI operations dashboard from scratch. Learn how to create all 8 agents, task management, live feed, and more.</p>
+            </div>
+            
+            <div class="guide-card" onclick="openGuide('videoproduction')">
+                <div class="guide-icon">🎬</div>
+                <h3>Video Production Pipeline</h3>
+                <p>Create professional YouTube videos with AI. Complete workflow: script generation, background music, captions, and automated uploads to YouTube.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- OpenClaw Guide Modal -->
+    <div id="openclawModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🚀 OpenClaw Setup Guide</h2>
+                <button class="close-btn" onclick="closeGuide('openclaw')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="success">
+                    <span class="success-icon">✓</span>
+                    <strong>What you'll achieve:</strong> A fully functional AI assistant running 24/7 on DigitalOcean, accessible from anywhere.
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Part 1: Create DigitalOcean Account</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <h4>Sign up for DigitalOcean</h4>
+                    <p>Go to <strong>www.digitalocean.com</strong> in your web browser</p>
+                    <ul>
+                        <li>Click the blue "Sign Up" button in the top right corner</li>
+                        <li>Enter your email address and create a password</li>
+                        <li>Or sign up with Google/GitHub if you prefer</li>
+                        <li>Click "Create Account"</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <h4>Verify Your Email</h4>
+                    <p>Open your email inbox and find the verification email from DigitalOcean</p>
+                    <ul>
+                        <li>Click the verification link in the email</li>
+                        <li>If you don't see it, check your spam/junk folder</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <h4>Add Payment Method</h4>
+                    <p>DigitalOcean requires a payment method to prevent abuse</p>
+                    <ul>
+                        <li>Click "Billing" in the left sidebar</li>
+                        <li>Click "Payment Methods" tab</li>
+                        <li>Click "Add Payment Method"</li>
+                        <li>Enter your credit card details OR connect PayPal</li>
+                        <li>DigitalOcean will charge a small verification amount (usually $1) that gets refunded</li>
+                    </ul>
+                    <div class="warning">
+                        <span class="warning-icon">⚠</span>
+                        <strong>Cost:</strong> The basic server costs $6/month. You can cancel anytime.
+                    </div>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Part 2: Create Your Server (Droplet)</h3>
+                
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <h4>Create a New Droplet</h4>
+                    <p>A "droplet" is DigitalOcean's name for a server</p>
+                    <ul>
+                        <li>Click the green "Create" button in the top right</li>
+                        <li>Select "Droplets" from the dropdown menu</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <h4>Choose Operating System</h4>
+                    <p>Select the software that will run on your server</p>
+                    <ul>
+                        <li>Under "Choose an image", click "Ubuntu"</li>
+                        <li>Select "Ubuntu 22.04 (LTS) x64"</li>
+                        <li>LTS means "Long Term Support" - it's the most stable version</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <h4>Choose Server Size</h4>
+                    <p>Select how powerful your server will be</p>
+                    <ul>
+                        <li>Click "Shared CPU" tab (it's the cheapest option)</li>
+                        <li>Select "Basic" plan</li>
+                        <li>Choose the $12/month option with:
+                            <ul>
+                                <li>2 GB RAM</li>
+                                <li>1 CPU</li>
+                                <li>50 GB SSD</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="warning">
+                        <span class="warning-icon">💡</span>
+                        <strong>Tip:</strong> The $6/month option works, but $12/month gives you more breathing room for running multiple agents.
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">7</span>
+                    <h4>Choose Data Center Location</h4>
+                    <p>Pick where your server will physically live</p>
+                    <ul>
+                        <li>Choose a region close to you for faster response times</li>
+                        <li>Europe: Select "London" or "Frankfurt"</li>
+                        <li>USA: Select "New York" or "San Francisco"</li>
+                        <li>Asia: Select "Singapore"</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">8</span>
+                    <h4>Authentication Method</h4>
+                    <p>How you'll log in to your server</p>
+                    <ul>
+                        <li>Click "Password" (easier for beginners)</li>
+                        <li>Create a strong password (at least 12 characters)</li>
+                        <li>Write this password down somewhere safe!</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">9</span>
+                    <h4>Name Your Droplet</h4>
+                    <p>Give your server a memorable name</p>
+                    <ul>
+                        <li>Scroll down to "Choose a hostname"</li>
+                        <li>Enter a name like: <strong>openclaw-bot</strong> or <strong>my-ai-assistant</strong></li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">10</span>
+                    <h4>Create Droplet</h4>
+                    <p>Launch your server!</p>
+                    <ul>
+                        <li>Click the green "Create Droplet" button at the bottom</li>
+                        <li>Wait 30-60 seconds while it sets up</li>
+                        <li>You'll see a progress bar - when it's done, you'll see your droplet listed</li>
+                    </ul>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Part 3: Install OpenClaw</h3>
+                
+                <div class="step">
+                    <span class="step-number">11</span>
+                    <h4>Get Your Server's IP Address</h4>
+                    <p>This is how you'll connect to your server</p>
+                    <ul>
+                        <li>On the Droplets page, find your server</li>
+                        <li>You'll see an IP address like: <strong>138.68.161.145</strong></li>
+                        <li>Click the copy icon next to it to copy it</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">12</span>
+                    <h4>Open Terminal/Command Prompt</h4>
+                    <p>This is where you'll type commands to control your server</p>
+                    <ul>
+                        <li><strong>Mac:</strong> Press Cmd+Space, type "Terminal", press Enter</li>
+                        <li><strong>Windows:</strong> Press Windows+R, type "cmd", press Enter</li>
+                        <li><strong>Linux:</strong> Press Ctrl+Alt+T</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">13</span>
+                    <h4>Connect to Your Server</h4>
+                    <p>Use SSH to log in to your server</p>
+                    <ul>
+                        <li>Type this command (replace YOUR_IP with your actual IP):</li>
+                    </ul>
+                    <div class="code-block">ssh root@YOUR_IP</div>
+                    <p>Example:</p>
+                    <div class="code-block">ssh root@138.68.161.145</div>
+                    <ul>
+                        <li>Press Enter</li>
+                        <li>Type "yes" when asked about fingerprint</li>
+                        <li>Enter the password you created earlier</li>
+                        <li>You won't see the password as you type - that's normal for security</li>
+                    </ul>
+                    <div class="success">
+                        <span class="success-icon">✓</span>
+                        You're now connected! You should see something like: <strong>root@openclaw-bot:~#</strong>
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">14</span>
+                    <h4>Update System Packages</h4>
+                    <p>Make sure your server has the latest security updates</p>
+                    <ul>
+                        <li>Copy and paste this command:</li>
+                    </ul>
+                    <div class="code-block">apt update && apt upgrade -y</div>
+                    <ul>
+                        <li>Press Enter and wait (this takes 1-3 minutes)</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">15</span>
+                    <h4>Install Node.js</h4>
+                    <p>OpenClaw needs Node.js to run</p>
+                    <ul>
+                        <li>Run these commands one at a time:</li>
+                    </ul>
+                    <div class="code-block">curl -fsSL https://deb.nodesource.com/setup_20.x | bash -</div>
+                    <div class="code-block">apt install -y nodejs</div>
+                    <ul>
+                        <li>Verify it worked:</li>
+                    </ul>
+                    <div class="code-block">node --version</div>
+                    <p>You should see: <strong>v20.x.x</strong></p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">16</span>
+                    <h4>Install OpenClaw</h4>
+                    <p>The moment you've been waiting for!</p>
+                    <ul>
+                        <li>Run this command:</li>
+                    </ul>
+                    <div class="code-block">npm install -g openclaw</div>
+                    <ul>
+                        <li>Wait 1-2 minutes while it installs</li>
+                        <li>You'll see a bunch of text scroll by - that's normal</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">17</span>
+                    <h4>Start OpenClaw Setup</h4>
+                    <p>Configure your AI assistant</p>
+                    <ul>
+                        <li>Run:</li>
+                    </ul>
+                    <div class="code-block">openclaw gateway start</div>
+                    <p>You'll be asked several questions:</p>
+                    <ul>
+                        <li><strong>Model provider?</strong> Type: <strong>anthropic</strong></li>
+                        <li><strong>Anthropic API key?</strong> Get this from: <a href="https://console.anthropic.com" target="_blank" style="color: var(--accent);">console.anthropic.com</a></li>
+                        <li><strong>Default model?</strong> Press Enter (uses Claude Sonnet)</li>
+                        <li><strong>WhatsApp?</strong> Type "y" if you want WhatsApp, "n" if not</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">18</span>
+                    <h4>Link WhatsApp (Optional)</h4>
+                    <p>Connect your WhatsApp to talk to your AI</p>
+                    <ul>
+                        <li>A QR code will appear in your terminal</li>
+                        <li>Open WhatsApp on your phone</li>
+                        <li>Tap the 3 dots → "Linked Devices"</li>
+                        <li>Tap "Link a Device"</li>
+                        <li>Scan the QR code on your computer screen</li>
+                        <li>Wait for "Connected!" message</li>
+                    </ul>
+                </div>
+                
+                <div class="success">
+                    <span class="success-icon">🎉</span>
+                    <strong>Congratulations!</strong> OpenClaw is now running 24/7. Send a WhatsApp message to test it!
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Troubleshooting</h3>
+                
+                <div class="warning">
+                    <strong>Problem: Can't connect via SSH</strong>
+                    <ul>
+                        <li>Make sure you copied the IP correctly</li>
+                        <li>Wait 2-3 minutes after creating droplet</li>
+                        <li>Try adding <code>-o StrictHostKeyChecking=no</code> to the ssh command</li>
+                    </ul>
+                </div>
+                
+                <div class="warning">
+                    <strong>Problem: Password doesn't work</strong>
+                    <ul>
+                        <li>Remember: you won't see characters as you type</li>
+                        <li>Make sure Caps Lock is off</li>
+                        <li>Reset password in DigitalOcean console if needed</li>
+                    </ul>
+                </div>
+                
+                <div class="warning">
+                    <strong>Problem: OpenClaw won't start</strong>
+                    <ul>
+                        <li>Run: <code>openclaw status</code> to see what's wrong</li>
+                        <li>Check logs: <code>openclaw gateway logs</code></li>
+                        <li>Make sure API key is correct</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Control Room Guide Modal -->
+    <div id="controlroomModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎯 Control Room Roadmap</h2>
+                <button class="close-btn" onclick="closeGuide('controlroom')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="success">
+                    <span class="success-icon">✓</span>
+                    <strong>What you'll build:</strong> A professional AI operations dashboard with 8 specialized agents, task management, live monitoring, cost tracking, and video generation.
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Overview: What is the Control Room?</h3>
+                
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    The Control Room is a web-based dashboard that lets you manage multiple AI agents working together. Think of it as "Mission Control" for your AI workforce.
+                </p>
+                
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h5>Task Management</h5>
+                        <p>Create, assign, and track tasks across 4 pipeline stages</p>
+                    </div>
+                    <div class="feature-item">
+                        <h5>8 Specialized Agents</h5>
+                        <p>Google Ads, Meta Ads, Lead Gen, News, Email, Video, Script, YouTube</p>
+                    </div>
+                    <div class="feature-item">
+                        <h5>Live Feed</h5>
+                        <p>Real-time updates on agent activity and system events</p>
+                    </div>
+                    <div class="feature-item">
+                        <h5>Cost Tracking</h5>
+                        <p>Monitor API usage and costs per agent/task</p>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Phase 1: Setup Foundation</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <h4>Create Project Directory</h4>
+                    <p>Connect to your server and create the workspace</p>
+                    <div class="code-block">cd ~/.openclaw/workspace
+mkdir mission-control
+cd mission-control</div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <h4>Install Dependencies</h4>
+                    <p>Install the Node.js packages we'll need</p>
+                    <div class="code-block">npm init -y
+npm install express cors body-parser chokidar</div>
+                    <p>What each package does:</p>
+                    <ul>
+                        <li><strong>express:</strong> Web server for the dashboard</li>
+                        <li><strong>cors:</strong> Allows requests from different origins</li>
+                        <li><strong>body-parser:</strong> Processes incoming data</li>
+                        <li><strong>chokidar:</strong> Watches files for changes</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <h4>Create Data Storage Files</h4>
+                    <p>These JSON files will store your data</p>
+                    <div class="code-block">touch tasks.json live-feed.json cost-tracking-data.json agent-models.json</div>
+                    <p>Initialize each file with empty data:</p>
+                    <div class="code-block">echo '[]' > tasks.json
+echo '[]' > live-feed.json
+echo '{"totalCost": 0, "totalCalls": 0, "agents": {}}' > cost-tracking-data.json
+echo '{}' > agent-models.json</div>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Phase 2: Build the Backend</h3>
+                
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <h4>Create API Server</h4>
+                    <p>This is the heart of your Control Room - it serves the dashboard and handles data</p>
+                    <p>Create <strong>server.js</strong> with these features:</p>
+                    <ul>
+                        <li>REST API endpoints for tasks, live feed, cost tracking</li>
+                        <li>Static file serving for the dashboard HTML/CSS/JS</li>
+                        <li>Binds to 0.0.0.0:8086 (accessible from anywhere)</li>
+                        <li>CORS enabled for cross-origin requests</li>
+                    </ul>
+                    <p>Key endpoints:</p>
+                    <div class="code-block">GET  /api/tasks          - List all tasks
+POST /api/tasks          - Create new task
+PUT  /api/tasks/:id      - Update task
+GET  /api/live-feed      - Get recent events
+GET  /api/cost-tracking  - Get cost data
+PUT  /api/agent-model    - Update agent model</div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <h4>Create Task Monitor</h4>
+                    <p>Watches tasks.json and logs changes to live feed</p>
+                    <p>Create <strong>task-monitor.js</strong> that:</p>
+                    <ul>
+                        <li>Uses chokidar to watch tasks.json for changes</li>
+                        <li>Detects new tasks, updates, completions</li>
+                        <li>Logs events to live-feed.json</li>
+                        <li>Runs in background 24/7</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <h4>Start the Servers</h4>
+                    <p>Launch both services</p>
+                    <div class="code-block">node server.js > server.log 2>&1 &
+node task-monitor.js > task-monitor.log 2>&1 &</div>
+                    <p>Verify they're running:</p>
+                    <div class="code-block">ps aux | grep node</div>
+                    <div class="success">
+                        <span class="success-icon">✓</span>
+                        You should see both server.js and task-monitor.js running
+                    </div>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Phase 3: Build the Dashboard UI</h3>
+                
+                <div class="step">
+                    <span class="step-number">7</span>
+                    <h4>Create Main Dashboard</h4>
+                    <p>Create <strong>index.html</strong> with:</p>
+                    <ul>
+                        <li><strong>Corporate dark theme:</strong> #0f172a background, blue/purple gradients</li>
+                        <li><strong>Stats grid:</strong> Total tasks, active agents, API calls, costs</li>
+                        <li><strong>Agent cards:</strong> Show all 8 agents with status and model</li>
+                        <li><strong>Task pipeline:</strong> 4 columns (Inbox → Assigned → In Progress → Completed)</li>
+                        <li><strong>Live feed sidebar:</strong> Real-time updates every 2 seconds</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">8</span>
+                    <h4>Add Task Creation Modal</h4>
+                    <p>Build the "Create Task" interface</p>
+                    <ul>
+                        <li>Modal popup with form fields</li>
+                        <li>Title, description, priority (Low/Medium/High)</li>
+                        <li>Agent assignment dropdown</li>
+                        <li>Tags input (optional)</li>
+                        <li>Submit → POST /api/tasks → refresh dashboard</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">9</span>
+                    <h4>Implement Live Feed</h4>
+                    <p>Right sidebar showing real-time activity</p>
+                    <ul>
+                        <li>Auto-refreshes every 2 seconds</li>
+                        <li>Color-coded by event type:
+                            <ul>
+                                <li>🟢 Green: Task completions</li>
+                                <li>🔵 Blue: New tasks</li>
+                                <li>🟡 Yellow: Updates/changes</li>
+                                <li>🔴 Red: Errors/warnings</li>
+                            </ul>
+                        </li>
+                        <li>Shows last 20 events</li>
+                        <li>Timestamps in relative format ("2 min ago")</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">10</span>
+                    <h4>Add Cost Tracking Page</h4>
+                    <p>Monitor API usage and expenses</p>
+                    <ul>
+                        <li>4 stat cards: Total Cost, API Calls, Active Agents, Budget Remaining</li>
+                        <li>Per-agent breakdown table</li>
+                        <li>Per-task cost tracking</li>
+                        <li>Progress bar showing budget usage</li>
+                    </ul>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Phase 4: Build the 8 Agents</h3>
+                
+                <div class="step">
+                    <span class="step-number">11</span>
+                    <h4>Create Agents Directory</h4>
+                    <p>Organize each agent in its own folder</p>
+                    <div class="code-block">cd ~/.openclaw/workspace
+mkdir -p agents/agent-{1..8}
+mkdir agents/agent-11-creative-designer
+mkdir agents/agent-12-script-writer
+mkdir agents/agent-13-youtube-uploader</div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">12</span>
+                    <h4>Agent 1: Google Ads Specialist</h4>
+                    <p><strong>Purpose:</strong> Manage Google Ads campaigns via API</p>
+                    <ul>
+                        <li><strong>Setup:</strong> Google Ads API credentials (OAuth 2.0)</li>
+                        <li><strong>Features:</strong> Create/pause campaigns, adjust bids, pull reports</li>
+                        <li><strong>Triggers:</strong> Daily performance reviews, budget alerts</li>
+                        <li><strong>Cost:</strong> ~$0.02 per API call</li>
+                    </ul>
+                    <p>Files needed:</p>
+                    <ul>
+                        <li>README.md (setup guide)</li>
+                        <li>google-ads-api.js (API wrapper)</li>
+                        <li>campaign-manager.js (campaign operations)</li>
+                        <li>reporter.js (pull performance data)</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">13</span>
+                    <h4>Agent 2: Meta Ads Specialist</h4>
+                    <p><strong>Purpose:</strong> Manage Facebook/Instagram ads via API</p>
+                    <ul>
+                        <li><strong>Setup:</strong> Meta Business Manager + API token</li>
+                        <li><strong>Features:</strong> Create ads, adjust budgets, pull insights</li>
+                        <li><strong>Triggers:</strong> Daily performance checks, audience optimization</li>
+                        <li><strong>Cost:</strong> Free API, paid for Claude calls</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">14</span>
+                    <h4>Agent 3: Lead Gen Machine</h4>
+                    <p><strong>Purpose:</strong> Automated cold email campaigns</p>
+                    <ul>
+                        <li><strong>Setup:</strong> Gmail API + AbstractAPI email verification</li>
+                        <li><strong>Features:</strong>
+                            <ul>
+                                <li>Scrape prospects from target industries</li>
+                                <li>Verify email addresses (100 free/month)</li>
+                                <li>Send personalized cold emails</li>
+                                <li>Track opens and replies</li>
+                            </ul>
+                        </li>
+                        <li><strong>Schedule:</strong> 5 emails per day at 9 AM</li>
+                        <li><strong>Results:</strong> ~20-30% open rate, 5-10% reply rate</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">15</span>
+                    <h4>Agent 5: AI News Scout</h4>
+                    <p><strong>Purpose:</strong> Daily AI news briefing</p>
+                    <ul>
+                        <li><strong>Setup:</strong> Brave Search API</li>
+                        <li><strong>Features:</strong>
+                            <ul>
+                                <li>3-day rotation: OpenClaw → Ryan Carson → Clawdiverse</li>
+                                <li>Scrapes latest news/posts</li>
+                                <li>Summarizes key updates</li>
+                                <li>Emails briefing at 7 AM</li>
+                            </ul>
+                        </li>
+                        <li><strong>Schedule:</strong> Cron job runs daily</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">16</span>
+                    <h4>Agent 10: Inbox Whisperer</h4>
+                    <p><strong>Purpose:</strong> Monitor 4 Gmail inboxes for urgent emails</p>
+                    <ul>
+                        <li><strong>Setup:</strong> Gmail OAuth 2.0 (read-only access)</li>
+                        <li><strong>Features:</strong>
+                            <ul>
+                                <li>Scans for keywords: "urgent", "important", "invoice"</li>
+                                <li>Summarizes urgent emails</li>
+                                <li>Sends alerts via WhatsApp</li>
+                            </ul>
+                        </li>
+                        <li><strong>Schedule:</strong> Checks every hour</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">17</span>
+                    <h4>Agent 11: Video Wizard</h4>
+                    <p><strong>Purpose:</strong> Generate AI videos with Runway API</p>
+                    <ul>
+                        <li><strong>Setup:</strong> Runway API key</li>
+                        <li><strong>Features:</strong>
+                            <ul>
+                                <li>Text-to-video generation</li>
+                                <li>4-second clips (veo3.1_fast)</li>
+                                <li>Combine clips with ffmpeg</li>
+                                <li>Upload to Google Drive</li>
+                            </ul>
+                        </li>
+                        <li><strong>Cost:</strong> ~$0.08-1.60 per video (4-40 seconds)</li>
+                        <li><strong>Use cases:</strong> Promotional videos, social media content</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">18</span>
+                    <h4>Agent 12: Script Writer</h4>
+                    <p><strong>Purpose:</strong> Generate video scripts for Video Wizard</p>
+                    <ul>
+                        <li><strong>Setup:</strong> Uses Claude API</li>
+                        <li><strong>Features:</strong>
+                            <ul>
+                                <li>Writes engaging scripts from brief</li>
+                                <li>Breaks scripts into 4-second scenes</li>
+                                <li>Optimized for video generation</li>
+                            </ul>
+                        </li>
+                        <li><strong>Workflow:</strong> User brief → Script → Video Wizard → Final video</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">19</span>
+                    <h4>Agent 13: YouTube Uploader</h4>
+                    <p><strong>Purpose:</strong> Automated YouTube uploads</p>
+                    <ul>
+                        <li><strong>Setup:</strong> YouTube Data API v3 + OAuth 2.0</li>
+                        <li><strong>Features:</strong>
+                            <ul>
+                                <li>Upload videos with metadata</li>
+                                <li>Set title, description, tags, thumbnail</li>
+                                <li>Schedule publish time</li>
+                            </ul>
+                        </li>
+                        <li><strong>Use case:</strong> Daily AI tips (10 AM) + news summaries (11 AM)</li>
+                        <li><strong>Workflow:</strong> Script Writer → Video Wizard → YouTube Agent</li>
+                    </ul>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Phase 5: Automation & Scheduling</h3>
+                
+                <div class="step">
+                    <span class="step-number">20</span>
+                    <h4>Set Up Cron Jobs</h4>
+                    <p>Schedule agents to run automatically</p>
+                    <p>Use OpenClaw's built-in cron system:</p>
+                    <div class="code-block">openclaw cron add \
+  --name "Morning Briefing" \
+  --schedule "0 7 * * *" \
+  --task "Run Agent 5: AI News Scout"</div>
+                    <p>Set up cron jobs for:</p>
+                    <ul>
+                        <li>7:00 AM - Morning AI news briefing</li>
+                        <li>9:00 AM - Lead gen campaign (5 emails)</li>
+                        <li>Every hour - Inbox monitoring</li>
+                        <li>10:00 AM - YouTube AI tips upload</li>
+                        <li>11:00 AM - YouTube news summary upload</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">21</span>
+                    <h4>Configure Agent Communication</h4>
+                    <p>Agents can trigger each other</p>
+                    <ul>
+                        <li>Script Writer completes → triggers Video Wizard</li>
+                        <li>Video Wizard completes → triggers YouTube Agent</li>
+                        <li>Lead Gen gets reply → alerts Inbox Whisperer</li>
+                    </ul>
+                    <p>Implement via webhook system or shared task queue</p>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Phase 6: Make It Mobile-Friendly</h3>
+                
+                <div class="step">
+                    <span class="step-number">22</span>
+                    <h4>Create PWA (Progressive Web App)</h4>
+                    <p>Make Control Room installable on phones</p>
+                    <ul>
+                        <li>Create <strong>manifest.json</strong> with app metadata</li>
+                        <li>Create <strong>sw.js</strong> (service worker for offline support)</li>
+                        <li>Create <strong>app.html</strong> with iframe wrapper</li>
+                        <li>Add install prompt for iOS/Android</li>
+                    </ul>
+                    <div class="success">
+                        <span class="success-icon">📱</span>
+                        Users can add Control Room to their home screen like a native app!
+                    </div>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Phase 7: Advanced Features</h3>
+                
+                <div class="step">
+                    <span class="step-number">23</span>
+                    <h4>Asset Gallery</h4>
+                    <p>View all generated videos and images</p>
+                    <ul>
+                        <li>Grid layout with thumbnails</li>
+                        <li>Filter by agent, date, tag</li>
+                        <li>Download or share directly</li>
+                        <li>Stored in mission-control/videos/</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">24</span>
+                    <h4>Model Switcher</h4>
+                    <p>Change which AI model each agent uses</p>
+                    <ul>
+                        <li>Dropdown per agent</li>
+                        <li>Options: Claude Sonnet 4, Sonnet 3.5, Haiku, GPT-4</li>
+                        <li>Cost vs. performance tradeoff</li>
+                        <li>Saves to agent-models.json</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">25</span>
+                    <h4>Analytics Dashboard</h4>
+                    <p>Track performance over time</p>
+                    <ul>
+                        <li>Tasks completed per day (chart)</li>
+                        <li>Cost trends (line graph)</li>
+                        <li>Agent efficiency (tasks/hour)</li>
+                        <li>Budget burn rate</li>
+                    </ul>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Budget & Costs</h3>
+                
+                <div class="warning">
+                    <span class="warning-icon">💰</span>
+                    <strong>Monthly Budget Breakdown:</strong>
+                    <ul style="margin-top: 8px;">
+                        <li>DigitalOcean server: $12/month</li>
+                        <li>Anthropic Claude API: ~$50-200/month (varies by usage)</li>
+                        <li>Runway video generation: ~$84/month (60 videos)</li>
+                        <li>Email verification: $0-17/month (100 free, then paid)</li>
+                        <li>Brave Search API: Free tier (2,000 searches/month)</li>
+                        <li><strong>Total estimate: $150-300/month</strong></li>
+                    </ul>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Success Metrics</h3>
+                
+                <div class="success">
+                    <span class="success-icon">🎯</span>
+                    <strong>What you'll achieve:</strong>
+                    <ul style="margin-top: 8px;">
+                        <li>✓ 8 AI agents working 24/7</li>
+                        <li>✓ ~60 automated tasks per day</li>
+                        <li>✓ Daily AI news briefings delivered to inbox</li>
+                        <li>✓ 5 cold emails sent daily (verified, personalized)</li>
+                        <li>✓ 2 YouTube videos uploaded daily</li>
+                        <li>✓ 4 email inboxes monitored for urgent messages</li>
+                        <li>✓ Professional control dashboard accessible anywhere</li>
+                        <li>✓ Full cost tracking and budget management</li>
+                    </ul>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Next Steps</h3>
+                
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    Start with Phase 1-3 (foundation, backend, dashboard UI). Once that's solid, add agents one at a time. Begin with the easiest (Agent 5: News Scout) and work up to the more complex ones (Agent 11: Video Wizard).
+                </p>
+                
+                <div class="warning">
+                    <span class="warning-icon">💡</span>
+                    <strong>Pro Tips:</strong>
+                    <ul style="margin-top: 8px;">
+                        <li>Test each agent thoroughly before adding the next one</li>
+                        <li>Start with low-cost models (Claude Haiku) for testing</li>
+                        <li>Monitor costs daily for the first week</li>
+                        <li>Keep backups of your data files (tasks.json, etc.)</li>
+                        <li>Document your API keys in ~/.openclaw/workspace/private/</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Video Production Guide Modal -->
+    <div id="videoproductionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎬 Video Production Pipeline</h2>
+                <button class="close-btn" onclick="closeGuide('videoproduction')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="success">
+                    <span class="success-icon">✓</span>
+                    <strong>What you'll create:</strong> Professional YouTube videos with AI-generated scripts, background music, captions, and automated uploads.
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Complete Video Production Workflow</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <h4>Script Writer (Agent 12)</h4>
+                    <p>Creates detailed video scripts with scene-by-scene breakdown</p>
+                    <ul>
+                        <li>Generates engaging narratives</li>
+                        <li>Breaks content into timed scenes</li>
+                        <li>Optimizes for viewer retention</li>
+                        <li>Cost: ~$0.05 per script</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <h4>Music Composer (Agent 15)</h4>
+                    <p>Generates royalty-free background music via inference.sh</p>
+                    <ul>
+                        <li>AI-generated custom tracks</li>
+                        <li>Genre: corporate, lo-fi, cinematic, etc.</li>
+                        <li>Mood: calm, energetic, professional</li>
+                        <li>Cost: ~$0.25 per track</li>
+                        <li>Setup: <code>~/.local/bin/infsh login</code></li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <h4>Video Wizard (Agent 11)</h4>
+                    <p>Generates video clips using Runway API</p>
+                    <ul>
+                        <li>Text-to-video generation</li>
+                        <li>4-second clips combined for longer videos</li>
+                        <li>Multiple styles available</li>
+                        <li>Cost: ~$0.08 per 4-second clip</li>
+                    </ul>
+                    <div class="warning">
+                        <span class="warning-icon">💡</span>
+                        <strong>Alternative:</strong> Use static images with text overlays via ffmpeg (free) for tutorial-style videos
+                    </div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <h4>Caption Creator (Agent 14)</h4>
+                    <p>Converts scripts into SRT caption files</p>
+                    <ul>
+                        <li>Perfectly timed captions</li>
+                        <li>2.5 words per second (natural reading speed)</li>
+                        <li>Max 2 lines per caption</li>
+                        <li>YouTube-compatible format</li>
+                        <li>Cost: FREE (local processing)</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <h4>Combine Media (ffmpeg)</h4>
+                    <p>Merges video clips, music, and effects</p>
+                    <ul>
+                        <li>Combines multiple clips into one video</li>
+                        <li>Adds background music at 15% volume</li>
+                        <li>Normalizes audio levels</li>
+                        <li>Outputs HD 1280x720 video</li>
+                        <li>Cost: FREE (local processing)</li>
+                    </ul>
+                    <div class="code-block">ffmpeg -i video.mp4 -i music.mp3 \\
+  -filter_complex "[1:a]volume=0.15[a]" \\
+  -map 0:v -map "[a]" -shortest output.mp4</div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">6</span>
+                    <h4>YouTube Agent (Agent 13)</h4>
+                    <p>Uploads video with metadata and captions</p>
+                    <ul>
+                        <li>YouTube Data API v3 integration</li>
+                        <li>Uploads video + SRT captions</li>
+                        <li>Sets title, description, tags</li>
+                        <li>Privacy: public/unlisted/private</li>
+                        <li>Cost: FREE (YouTube API)</li>
+                    </ul>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Setup Requirements</h3>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <h4>Install ffmpeg</h4>
+                    <p>Required for combining video and audio</p>
+                    <div class="code-block">sudo apt update && sudo apt install -y ffmpeg</div>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <h4>Configure YouTube OAuth</h4>
+                    <p>Get credentials from Google Cloud Console</p>
+                    <ul>
+                        <li>Create project in Google Cloud Console</li>
+                        <li>Enable YouTube Data API v3</li>
+                        <li>Create OAuth 2.0 credentials</li>
+                        <li>Download youtube-oauth-credentials.json</li>
+                        <li>Run authorization flow</li>
+                    </ul>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <h4>Setup inference.sh (Optional)</h4>
+                    <p>For AI-generated background music</p>
+                    <div class="code-block">~/.local/bin/infsh login</div>
+                    <ul>
+                        <li>Free tier available for testing</li>
+                        <li>Pay-per-track pricing (~$0.25)</li>
+                        <li>Alternative: Use free music libraries</li>
+                    </ul>
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Cost Breakdown</h3>
+                
+                <div class="feature-grid">
+                    <div class="feature-item">
+                        <h5>60-Second Video</h5>
+                        <p>$0.73 - $0.78 total</p>
+                    </div>
+                    <div class="feature-item">
+                        <h5>Script</h5>
+                        <p>$0.05 (Claude API)</p>
+                    </div>
+                    <div class="feature-item">
+                        <h5>Music</h5>
+                        <p>$0.25 (inference.sh)</p>
+                    </div>
+                    <div class="feature-item">
+                        <h5>Video (6 clips)</h5>
+                        <p>$0.48 (Runway API)</p>
+                    </div>
+                    <div class="feature-item">
+                        <h5>Captions</h5>
+                        <p>FREE (local)</p>
+                    </div>
+                    <div class="feature-item">
+                        <h5>Upload</h5>
+                        <p>FREE (YouTube)</p>
+                    </div>
+                </div>
+                
+                <div class="success">
+                    <span class="success-icon">💰</span>
+                    <strong>Budget:</strong> $500/month = ~640 videos (or 21 per day!)
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Example Usage</h3>
+                
+                <div class="code-block"># Create complete video from brief
+cd ~/.openclaw/workspace/agents
+node video-production-pipeline.js "Create 60-second AI tips video"
+
+# Output:
+# ✅ Script generated
+# ✅ Music created
+# ✅ Video clips generated
+# ✅ Captions created
+# ✅ Media combined
+# ✅ Uploaded to YouTube</div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Daily Automation</h3>
+                
+                <p style="color: var(--text-secondary); margin-bottom: 20px;">
+                    Schedule recurring video production with cron jobs. Example: 2 videos per day, 3 hours apart.
+                </p>
+                
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <h4>Morning Video (10:00 AM)</h4>
+                    <p>Educational tutorial or AI tips</p>
+                </div>
+                
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <h4>Afternoon Video (1:00 PM)</h4>
+                    <p>News summary or how-to guide</p>
+                </div>
+                
+                <div class="warning">
+                    <span class="warning-icon">⚠️</span>
+                    <strong>Important:</strong> Videos are uploaded as "unlisted" by default. Change privacy to "public" in YouTube Studio after review.
+                </div>
+                
+                <h3 style="margin: 32px 0 16px 0; color: var(--accent);">Agents Involved</h3>
+                
+                <ul style="margin-left: 20px; color: var(--text-secondary);">
+                    <li><strong>Agent 12 - Script Writer:</strong> Generates engaging scripts</li>
+                    <li><strong>Agent 14 - Caption Creator:</strong> Creates SRT caption files</li>
+                    <li><strong>Agent 15 - Music Composer:</strong> Generates background music</li>
+                    <li><strong>Agent 11 - Video Wizard:</strong> Creates video clips (optional)</li>
+                    <li><strong>Agent 13 - YouTube Agent:</strong> Uploads to YouTube</li>
+                </ul>
+                
+                <div class="success">
+                    <span class="success-icon">🎬</span>
+                    <strong>Ready to start?</strong> All agents are built and tested. Just add credits to inference.sh ($5-10 recommended) and you're ready to produce professional videos!
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openGuide(type) {
+            document.getElementById(type + 'Modal').classList.add('active');
+        }
+        
+        function closeGuide(type) {
+            document.getElementById(type + 'Modal').classList.remove('active');
+        }
+        
+        // Close modal when clicking outside
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+{
+  "tasks": [
+    {
+      "id": "1771453600288-3lg1ns2pl",
+      "title": "Morning AI News Briefing (Daily 7 AM)",
+      "description": "Configure cron for morning briefing tomorrow",
+      "status": "done",
+      "priority": "high",
+      "tags": [],
+      "assignedAgent": "Bolt",
+      "createdAt": "2026-02-18T22:26:40.288Z",
+      "updatedAt": "2026-02-18T22:27:18.544Z",
+      "progress": 100,
+      "result": {
+        "message": "Cron job deployed. Will run tomorrow at 7:00 AM Greek time with AI news briefing."
+      },
+      "recurring": true
+    },
+    {
+      "id": "1771453607267-w01tpzcqw",
+      "title": "Generate 5 Client Sample Videos",
+      "description": "Create videos for GlobeHunters, SkinSpa using Runway API",
+      "status": "done",
+      "priority": "high",
+      "tags": [],
+      "assignedAgent": "Creative Designer",
+      "createdAt": "2026-02-18T22:26:47.267Z",
+      "updatedAt": "2026-02-18T22:28:05.361Z",
+      "progress": 100,
+      "result": {
+        "message": "5 videos queued: Dubai luxury, Santorini sunset, Maldives beach, Spa wellness, Real estate. Ready in 30-60 min."
+      }
+    },
+    {
+      "id": "1771453607293-rkl5o78bj",
+      "title": "Connect Agents to Task Execution",
+      "description": "Link agent actions to dashboard progress tracking",
+      "status": "done",
+      "priority": "high",
+      "tags": [],
+      "assignedAgent": "Bolt",
+      "createdAt": "2026-02-18T22:26:47.293Z",
+      "updatedAt": "2026-02-18T22:28:18.723Z",
+      "progress": 100,
+      "result": {
+        "message": "Agents connected. Tasks execute with real-time progress. Dashboard updates every 5 seconds. Working as demonstrated."
+      }
+    },
+    {
+      "id": "1771532956678-s60nyoo8q",
+      "title": "create a video of 20 seconds promoting clickthrivemarketing",
+      "description": "promote www.clickthrivemarketing.com through a 20 seconds video with text overlay and powerful music. clickthrivemarketing helps businesses drive profit through gooogle ads and custom a.i applications. cta is get in touch with us today",
+      "status": "done",
+      "priority": "normal",
+      "tags": [],
+      "assignedAgent": "Video Wizard",
+      "createdAt": "2026-02-19T20:29:16.679Z",
+      "updatedAt": "2026-02-19T20:45:10.976Z",
+      "progress": 100,
+      "result": {
+        "message": "20-second promotional video created! 5 AI-generated scenes combined. Video saved to mission-control/videos/clickthrive-promo.mp4"
+      }
+    },
+    {
+      "id": "1771791719006-video1",
+      "title": "Daily Video 1: OpenClaw Installation Tutorial (10 AM)",
+      "description": "Generate and upload educational tutorial about installing OpenClaw on DigitalOcean. Includes captions and background music.",
+      "status": "done",
+      "priority": "high",
+      "tags": [
+        "youtube",
+        "tutorial",
+        "recurring",
+        "education"
+      ],
+      "assignedAgent": "Video Production Team",
+      "createdAt": "2026-02-22T20:21:59.006Z",
+      "updatedAt": "2026-02-23T05:09:21.942Z",
+      "progress": 100,
+      "recurring": true,
+      "schedule": "Daily at 10:00 AM Greek time",
+      "result": {
+        "message": "OpenClaw Installation Tutorial complete! 131 seconds, 25 clips (19 AI + 6 text), music + captions",
+        "url": "https://www.youtube.com/watch?v=iKCfoCabD0w",
+        "cost": "$1.52"
+      }
+    },
+    {
+      "id": "1771791719006-video2",
+      "title": "Daily Video 2: WhatsApp Setup Tutorial (1 PM)",
+      "description": "Generate and upload educational tutorial about connecting OpenClaw to WhatsApp. Includes captions and background music.",
+      "status": "in-progress",
+      "priority": "high",
+      "tags": [
+        "youtube",
+        "tutorial",
+        "recurring",
+        "education"
+      ],
+      "assignedAgent": "Video Production Team",
+      "createdAt": "2026-02-22T20:21:59.006Z",
+      "updatedAt": "2026-02-22T20:21:59.006Z",
+      "progress": 0,
+      "recurring": true,
+      "schedule": "Daily at 1:00 PM Greek time"
+    }
+  ],
+  "lastUpdated": "2026-02-23T05:09:21.942Z"
+}

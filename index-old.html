@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control | ClickThrive AI Workforce</title>
+    <script src="auth.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f6f8;
+            color: #1a1a1a;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 100;
+        }
+        .top-bar .logo {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .top-bar .stats {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        .top-bar .stat {
+            text-align: center;
+        }
+        .top-bar .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+        .top-bar .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .top-bar .actions {
+            display: flex;
+            gap: 12px;
+        }
+        .top-bar .btn {
+            padding: 8px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .top-bar .btn:hover {
+            background: #f9fafb;
+            border-color: #667eea;
+        }
+        .top-bar .btn.primary {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .top-bar .btn.primary:hover {
+            background: #5568d3;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Sidebar - Agents */
+        .sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 20px 20px 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .sidebar-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .sidebar-header .count {
+            color: #667eea;
+            margin-left: 8px;
+        }
+        .agent-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        .agent-item {
+            padding: 14px 20px;
+            border-bottom: 1px solid #f3f4f6;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .agent-item:hover {
+            background: #f9fafb;
+        }
+        .agent-item.active {
+            background: #eef2ff;
+            border-left: 3px solid #667eea;
+        }
+        .agent-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .agent-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .agent-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 2px;
+        }
+        .agent-role {
+            font-size: 12px;
+            color: #6b7280;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .agent-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        .agent-status.working {
+            background: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+        .agent-status.idle {
+            background: #f59e0b;
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+        .agent-model {
+            font-size: 10px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .agent-cost {
+            font-size: 10px;
+            color: #10b981;
+            margin-top: 2px;
+            font-weight: 600;
+        }
+
+        /* Center - Mission Queue */
+        .mission-queue {
+            flex: 1;
+            padding: 20px;
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+        .queue-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .queue-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .queue-filters {
+            display: flex;
+            gap: 8px;
+        }
+        .filter-btn {
+            padding: 6px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        .kanban-board {
+            display: flex;
+            gap: 16px;
+            height: calc(100vh - 200px);
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+        .kanban-column {
+            min-width: 300px;
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .column-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .column-count {
+            background: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #667eea;
+        }
+        .task-cards {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .task-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .task-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .task-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 6px;
+        }
+        .task-description {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f3f4f6;
+        }
+        .task-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .task-tag {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .task-tag.social {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .task-tag.marketing {
+            background: #fce7f3;
+            color: #9f1239;
+        }
+        .task-tag.guide {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .task-agent {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        .task-time {
+            font-size: 10px;
+            color: #9ca3af;
+        }
+
+        /* Right Sidebar - Live Feed */
+        .live-feed {
+            width: 360px;
+            background: white;
+            border-left: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+        }
+        .feed-header {
+            padding: 20px 20px 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .feed-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .feed-header .live-indicator {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        .feed-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        .feed-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .feed-item:last-child {
+            border-bottom: none;
+        }
+        .feed-agent {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+        .feed-message {
+            font-size: 13px;
+            color: #4b5563;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        .feed-message strong {
+            color: #1a1a1a;
+        }
+        .feed-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .feed-time {
+            font-size: 11px;
+            color: #9ca3af;
+        }
+        .feed-action {
+            font-size: 11px;
+            color: #667eea;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        
+        /* Agent Communication Styles */
+        .feed-item-communication {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            border-left: 3px solid #667eea;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .feed-communication {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .feed-from {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .feed-arrow {
+            color: #667eea;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .feed-comm-type {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: fit-content;
+        }
+        
+        /* Agent Action Styles */
+        .feed-item-action {
+            background: rgba(52, 168, 83, 0.05);
+            border-left: 3px solid #34a853;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .feed-action {
+            margin-top: 8px;
+        }
+        .feed-details {
+            font-size: 12px;
+            color: #4b5563;
+            margin-top: 4px;
+            font-weight: normal;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f3f4f6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+    <link rel="stylesheet" href="modal-styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Top Bar -->
+        <div class="top-bar">
+            <div class="logo">
+                🤖 MISSION CONTROL
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">11</div>
+                    <div class="stat-label">Agents Active</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">48</div>
+                    <div class="stat-label">Tasks in Queue</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">$127</div>
+                    <div class="stat-label">Cost This Month</div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn" onclick="window.location.href='assets-gallery.html'">🎨 Assets Gallery</button>
+                <button class="btn" onclick="window.location.href='project-tracker.html'">🚀 Project Progress</button>
+                <button class="btn" onclick="window.location.href='cost-tracking.html'">💰 Cost Tracking</button>
+                <button class="btn" onclick="window.location.href='executive-summary.html'">📊 Executive Summary</button>
+                <button class="btn primary">+ New Task</button>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Left Sidebar - Agents -->
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h2>Agents <span class="count">9</span></h2>
+                </div>
+                <div class="agent-list">
+                    <div class="agent-item active">
+                        <div class="agent-avatar">🌐</div>
+                        <div class="agent-info">
+                            <div class="agent-name">All Agents</div>
+                            <div class="agent-role">9 active</div>
+                        </div>
+                        <div class="agent-status working"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">🎯</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Google Ads Specialist</div>
+                            <div class="agent-role">Campaign Management</div>
+                            <div class="agent-model">75% Code / 25% Sonnet</div>
+                            <div class="agent-cost">$1.42 today | $22.40 month</div>
+                        </div>
+                        <div class="agent-status working"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">📱</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Meta Ads Specialist</div>
+                            <div class="agent-role">Facebook & Instagram</div>
+                            <div class="agent-model">80% Code / 20% Sonnet</div>
+                            <div class="agent-cost">$1.08 today | $18.75 month</div>
+                        </div>
+                        <div class="agent-status working"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">🚀</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Lead Gen Machine</div>
+                            <div class="agent-role">B2B Lead Generation</div>
+                            <div class="agent-model">95% Code / 5% Sonnet</div>
+                            <div class="agent-cost">$0.89 today | $15.60 month</div>
+                        </div>
+                        <div class="agent-status working"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">🐦</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Twitter Content Bot</div>
+                            <div class="agent-role">@ClickThriveAI</div>
+                            <div class="agent-model">20% Code / 80% Sonnet</div>
+                            <div class="agent-cost">$2.15 today | $31.20 month</div>
+                        </div>
+                        <div class="agent-status idle"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">📰</div>
+                        <div class="agent-info">
+                            <div class="agent-name">AI News Researcher</div>
+                            <div class="agent-role">Daily Briefings</div>
+                            <div class="agent-model">90% Code / 10% Sonnet</div>
+                            <div class="agent-cost">$0.52 today | $8.90 month</div>
+                        </div>
+                        <div class="agent-status working"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">✍️</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Content Writer</div>
+                            <div class="agent-role">SEO & Ad Copy</div>
+                            <div class="agent-model">65% Code / 35% Sonnet</div>
+                            <div class="agent-cost">$2.88 today | $18.50 month</div>
+                        </div>
+                        <div class="agent-status working"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">🎨</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Creative Designer</div>
+                            <div class="agent-role">Videos & Images</div>
+                            <div class="agent-model">70% Code / 30% Sonnet</div>
+                            <div class="agent-cost">$3.42 today | $45.80 month</div>
+                        </div>
+                        <div class="agent-status working"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">📧</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Email Automation</div>
+                            <div class="agent-role">Reports & Follow-ups</div>
+                            <div class="agent-model">85% Code / 15% Sonnet</div>
+                            <div class="agent-cost">$0.72 today | $6.20 month</div>
+                        </div>
+                        <div class="agent-status working"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">📊</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Reporting Agent</div>
+                            <div class="agent-role">Dashboards & Analytics</div>
+                            <div class="agent-model">88% Code / 12% Sonnet</div>
+                            <div class="agent-cost">$0.98 today | $3.50 month</div>
+                        </div>
+                        <div class="agent-status idle"></div>
+                    </div>
+                    <div class="agent-item">
+                        <div class="agent-avatar">💬</div>
+                        <div class="agent-info">
+                            <div class="agent-name">Client Communication</div>
+                            <div class="agent-role">Slack & Email Monitor</div>
+                            <div class="agent-model">92% Code / 8% Sonnet</div>
+                            <div class="agent-cost">$0.60 today | $2.80 month</div>
+                        </div>
+                        <div class="agent-status working"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Center - Mission Queue -->
+            <div class="mission-queue">
+                <div class="queue-header">
+                    <h2>MISSION QUEUE</h2>
+                    <div class="queue-filters">
+                        <button class="filter-btn active">All</button>
+                        <button class="filter-btn">Active</button>
+                        <button class="filter-btn">Review</button>
+                        <button class="filter-btn">Done</button>
+                    </div>
+                </div>
+                <div class="kanban-board">
+                    <!-- Inbox Column -->
+                    <div class="kanban-column" data-column="inbox">
+                        <div class="column-header">
+                            <div class="column-title">📥 Inbox</div>
+                            <div class="column-count">8</div>
+                        </div>
+                        <div class="task-cards">
+                            <div class="task-card">
+                                <div class="task-title">Stay Loyal PSEO Content</div>
+                                <div class="task-description">Generate 50 breed-specific articles with comparison angles</div>
+                                <div class="task-tags">
+                                    <span class="task-tag guide">SEO</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">✍️ Content Writer</div>
+                                    <div class="task-time">5 min ago</div>
+                                </div>
+                            </div>
+                            <div class="task-card">
+                                <div class="task-title">Skin Spa Creative Assets</div>
+                                <div class="task-description">10 images + 2 videos matching luxury spa aesthetic</div>
+                                <div class="task-tags">
+                                    <span class="task-tag marketing">Creative</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">External: Christina</div>
+                                    <div class="task-time">1 hour ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assigned Column -->
+                    <div class="kanban-column" data-column="assigned">
+                        <div class="column-header">
+                            <div class="column-title">✅ Assigned</div>
+                            <div class="column-count">12</div>
+                        </div>
+                        <div class="task-cards">
+                            <div class="task-card">
+                                <div class="task-title">GlobeHunters Visual Content</div>
+                                <div class="task-description">43 destination hero images for package holidays website</div>
+                                <div class="task-tags">
+                                    <span class="task-tag marketing">Content</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">External: Christina</div>
+                                    <div class="task-time">Yesterday</div>
+                                </div>
+                            </div>
+                            <div class="task-card">
+                                <div class="task-title">Daily Lead Generation</div>
+                                <div class="task-description">Find 15 travel agencies without booking systems</div>
+                                <div class="task-tags">
+                                    <span class="task-tag social">Leads</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">🚀 Lead Gen</div>
+                                    <div class="task-time">2 hours ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- In Progress Column -->
+                    <div class="kanban-column" data-column="in-progress">
+                        <div class="column-header">
+                            <div class="column-title">🔄 In Progress</div>
+                            <div class="column-count">15</div>
+                        </div>
+                        <div class="task-cards">
+                            <div class="task-card">
+                                <div class="task-title">Google Ads Campaign Audit</div>
+                                <div class="task-description">Review Restored Timbers account, identify wasted spend</div>
+                                <div class="task-tags">
+                                    <span class="task-tag marketing">Ads</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">🎯 Google Ads</div>
+                                    <div class="task-time">15 min ago</div>
+                                </div>
+                            </div>
+                            <div class="task-card">
+                                <div class="task-title">🔄 Agent 5: AI News Dashboard Build</div>
+                                <div class="task-description">Building scraper for OpenClaw/Claude/Twitter news sources. Dashboard UI complete, implementing RSS feeds + Twitter API.</div>
+                                <div class="task-tags">
+                                    <span class="task-tag guide">Building</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">📰 AI News</div>
+                                    <div class="task-time">Just now</div>
+                                </div>
+                            </div>
+                            <div class="task-card">
+                                <div class="task-title">🔄 Agent 11: Creative Designer Setup</div>
+                                <div class="task-description">Setting up Google Drive folder structure + Runway API integration. Ready to generate first batch of assets.</div>
+                                <div class="task-tags">
+                                    <span class="task-tag marketing">Building</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">🎨 Creative Designer</div>
+                                    <div class="task-time">Just now</div>
+                                </div>
+                            </div>
+                            <div class="task-card">
+                                <div class="task-title">🔄 Agent 4: Twitter Account Creation</div>
+                                <div class="task-description">Creating @AILabTester account with virtual phone number. Profile design + API access application in progress.</div>
+                                <div class="task-tags">
+                                    <span class="task-tag social">Building</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">🐦 Twitter Bot</div>
+                                    <div class="task-time">Just now</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Review Column -->
+                    <div class="kanban-column" data-column="review">
+                        <div class="column-header">
+                            <div class="column-title">👁️ Review</div>
+                            <div class="column-count">7</div>
+                        </div>
+                        <div class="task-cards">
+                            <div class="task-card">
+                                <div class="task-title">Client Performance Reports</div>
+                                <div class="task-description">Weekly dashboards for 8 active clients ready for review</div>
+                                <div class="task-tags">
+                                    <span class="task-tag guide">Reporting</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">📊 Reporting</div>
+                                    <div class="task-time">3 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="task-card">
+                                <div class="task-title">Lead Qualification Summary</div>
+                                <div class="task-description">47 B2B leads scored and categorized for outreach</div>
+                                <div class="task-tags">
+                                    <span class="task-tag social">Leads</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">🚀 Lead Gen</div>
+                                    <div class="task-time">Yesterday</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Done Column -->
+                    <div class="kanban-column" data-column="done">
+                        <div class="column-header">
+                            <div class="column-title">✅ Done</div>
+                            <div class="column-count">23</div>
+                        </div>
+                        <div class="task-cards">
+                            <div class="task-card">
+                                <div class="task-title">Chander Task Dashboard</div>
+                                <div class="task-description">Interactive task manager for GlobeHunters integration tasks</div>
+                                <div class="task-tags">
+                                    <span class="task-tag guide">Dashboard</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">⚡ Bolt</div>
+                                    <div class="task-time">Yesterday</div>
+                                </div>
+                            </div>
+                            <div class="task-card">
+                                <div class="task-title">Stay Loyal PSEO Email</div>
+                                <div class="task-description">Sent onboarding roadmap + questionnaire to David</div>
+                                <div class="task-tags">
+                                    <span class="task-tag marketing">Email</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">📧 Email Agent</div>
+                                    <div class="task-time">2 hours ago</div>
+                                </div>
+                            </div>
+                            <div class="task-card">
+                                <div class="task-title">Morning AI Briefing</div>
+                                <div class="task-description">Delivered OpenClaw news + Claude 4.6 updates</div>
+                                <div class="task-tags">
+                                    <span class="task-tag guide">Research</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">📰 AI News</div>
+                                    <div class="task-time">5 hours ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Waiting Column -->
+                    <div class="kanban-column" data-column="waiting">
+                        <div class="column-header">
+                            <div class="column-title">⏸️ Waiting</div>
+                            <div class="column-count">3</div>
+                        </div>
+                        <div class="task-cards">
+                            <div class="task-card">
+                                <div class="task-title">PSEO Engine Testing</div>
+                                <div class="task-description">Awaiting Gmail app password setup for email alerts</div>
+                                <div class="task-tags">
+                                    <span class="task-tag guide">Testing</span>
+                                </div>
+                                <div class="task-meta">
+                                    <div class="task-agent">⚡ Bolt</div>
+                                    <div class="task-time">3 days ago</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar - Live Feed -->
+            <div class="live-feed">
+                <div class="feed-header">
+                    <h2><span class="live-indicator"></span> LIVE</h2>
+                </div>
+                <div class="feed-list">
+                    <div class="feed-item">
+                        <div class="feed-agent">🎨 Creative Designer</div>
+                        <div class="feed-message">Setting up <strong>Google Drive folder</strong> for creative assets. Runway API configured.</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">Just now</div>
+                        </div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-agent">📰 AI News</div>
+                        <div class="feed-message">Dashboard built at <strong>http://138.68.161.145:8087</strong>. Implementing scrapers for OpenClaw/Claude/Twitter.</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">2 min ago</div>
+                        </div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-agent">🐦 Twitter Bot</div>
+                        <div class="feed-message">Creating <strong>@AILabTester</strong> account. Virtual phone number acquired. Profile design ready.</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">3 min ago</div>
+                        </div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-agent">⚡ Bolt</div>
+                        <div class="feed-message">Started building <strong>3 priority agents</strong>: AI News, Creative Designer, Twitter Bot</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">15 min ago</div>
+                        </div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-agent">📧 Email Automation</div>
+                        <div class="feed-message">Sent <strong>Stay Loyal PSEO onboarding</strong> email to David + Spiros</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">2 hours ago</div>
+                            <div class="feed-action">View →</div>
+                        </div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-agent">🎯 Google Ads Specialist</div>
+                        <div class="feed-message">Identified <strong>$234 wasted spend</strong> on Restored Timbers campaign</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">3 hours ago</div>
+                            <div class="feed-action">Details →</div>
+                        </div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-agent">📰 AI News Researcher</div>
+                        <div class="feed-message">Delivered morning briefing: <strong>Claude 4.6 Sonnet</strong> + OpenClaw security alerts</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">5 hours ago</div>
+                            <div class="feed-action">Read →</div>
+                        </div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-agent">🚀 Lead Gen Machine</div>
+                        <div class="feed-message">Found <strong>12 high-quality leads</strong> (avg score 8.5+) for ClickThrive</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">6 hours ago</div>
+                            <div class="feed-action">View leads →</div>
+                        </div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-agent">✍️ Content Writer</div>
+                        <div class="feed-message">Generated <strong>15 ad copy variants</strong> for Client X campaign</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">8 hours ago</div>
+                        </div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-agent">📊 Reporting Agent</div>
+                        <div class="feed-message">Completed <strong>weekly performance reports</strong> for 8 clients</div>
+                        <div class="feed-meta">
+                            <div class="feed-time">Yesterday 8 PM</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Task Modal -->
+    <div id="new-task-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Task</h2>
+                <button class="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="task-title">Task Title *</label>
+                    <input type="text" id="task-title" placeholder="e.g., Generate Santorini hero video">
+                </div>
+                <div class="form-group">
+                    <label for="task-description">Description *</label>
+                    <textarea id="task-description" placeholder="Describe what needs to be done..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="task-priority">Priority</label>
+                    <select id="task-priority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-cancel">Cancel</button>
+                <button class="btn btn-submit">Create Task</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real-time updates
+        setInterval(() => {
+            // In production, this would fetch live data via WebSocket
+            console.log('Checking for agent updates...');
+        }, 5000);
+
+        // Agent filtering
+        document.querySelectorAll('.agent-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.agent-item').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+    <script src="mission-control-cloud.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "bolt-control-room",
+  "version": "1.0.0",
+  "description": "Bolt's Mission Control Dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.0"
+  }
+}

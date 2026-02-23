@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mission Control Simple Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .box { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; }
+        h1 { color: #667eea; }
+        pre { background: #f0f0f0; padding: 10px; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>Mission Control Data Test</h1>
+    
+    <div class="box">
+        <h2>Tasks</h2>
+        <pre id="tasks">Loading...</pre>
+    </div>
+    
+    <div class="box">
+        <h2>Agents & Cost</h2>
+        <pre id="cost">Loading...</pre>
+    </div>
+    
+    <div class="box">
+        <h2>Live Feed</h2>
+        <pre id="feed">Loading...</pre>
+    </div>
+    
+    <script>
+        async function loadData() {
+            try {
+                // Load tasks
+                const tasksResp = await fetch('./tasks.json?t=' + Date.now());
+                const tasksData = await tasksResp.json();
+                document.getElementById('tasks').textContent = 
+                    `Total tasks: ${tasksData.tasks?.length || 0}\n\n` +
+                    JSON.stringify(tasksData, null, 2).substring(0, 500);
+                
+                // Load cost data
+                const costResp = await fetch('./cost-tracking-data.json?t=' + Date.now());
+                const costData = await costResp.json();
+                document.getElementById('cost').textContent = 
+                    `Agents: ${costData.agents?.length || 0}\n` +
+                    `Total cost: $${costData.totals?.totalCost || 0}\n` +
+                    `Total calls: ${costData.totals?.totalCalls || 0}\n\n` +
+                    JSON.stringify(costData.agents || [], null, 2).substring(0, 500);
+                
+                // Load live feed
+                const feedResp = await fetch('./live-feed.json?t=' + Date.now());
+                const feedData = await feedResp.json();
+                document.getElementById('feed').textContent = 
+                    `Events: ${feedData.events?.length || 0}\n\n` +
+                    JSON.stringify(feedData.events?.slice(0, 3) || [], null, 2);
+                    
+            } catch (e) {
+                document.body.innerHTML += '<div class="box" style="background:#fee;"><h2>Error</h2><pre>' + e.message + '</pre></div>';
+            }
+        }
+        
+        loadData();
+        
+        // Auto-refresh every 10 seconds
+        setInterval(loadData, 10000);
+    </script>
+</body>
+</html>

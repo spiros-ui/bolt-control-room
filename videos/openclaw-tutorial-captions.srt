@@ -1,0 +1,157 @@
+1
+00:00:00,000 --> 00:00:06,400
+Welcome to OpenClaw Installation Tutorial.
+In this video, we'll install OpenClaw on
+DigitalOcean step by step.
+
+2
+00:00:06,400 --> 00:00:12,400
+Step 1: Go to digitalocean.com and click
+Sign Up. Enter your email and create a
+
+3
+00:00:12,400 --> 00:00:13,599
+or
+or GitHub.
+
+4
+00:00:13,599 --> 00:00:19,600
+Step 2: Verify your email. Open your inbox
+and click the verification link from
+DigitalOcean.
+
+5
+00:00:19,600 --> 00:00:24,800
+Step 3: Add a payment method. Click
+Billing, then Payment Methods, then Add
+
+6
+00:00:24,800 --> 00:00:26,000
+connect
+connect PayPal.
+
+7
+00:00:26,000 --> 00:00:30,399
+The basic server costs $6 per month. You
+can cancel anytime.
+
+8
+00:00:30,399 --> 00:00:38,399
+Step 4: Create a droplet. Click the green
+Create button in the top right, then
+select Droplets from the menu.
+
+9
+00:00:38,399 --> 00:00:46,399
+Step 5: Choose Ubuntu 22.04 LTS as your
+operating system. LTS means Long Term
+Support - the most stable version.
+
+10
+00:00:46,399 --> 00:00:56,799
+Step 6: Select the 12 dollar per month
+plan with 2 GB RAM, 1 CPU, and 50 GB SSD.
+This gives you room for multiple agents.
+
+11
+00:00:56,799 --> 00:01:04,399
+Step 7: Choose a data center close to you.
+Europe: London or Frankfurt. USA: New York
+or San Francisco.
+
+12
+00:01:04,399 --> 00:01:10,399
+Step 8: Select Password authentication and
+create a strong password. Write it down
+somewhere safe!
+
+13
+00:01:10,399 --> 00:01:15,199
+Step 9: Name your droplet. Use something
+memorable like openclaw-bot or
+my-ai-assistant.
+
+14
+00:01:15,199 --> 00:01:21,199
+Step 10: Click Create Droplet and wait 30
+to 60 seconds while it sets up.
+
+15
+00:01:21,199 --> 00:01:27,199
+Step 11: Copy your server's IP address. It
+looks like 138.68.161.145. Click the copy
+icon.
+
+16
+00:01:27,199 --> 00:01:34,799
+Step 12: Open Terminal on Mac or Command
+Prompt on Windows. Type: ssh root@ then
+paste your IP address.
+
+17
+00:01:34,799 --> 00:01:42,399
+Step 13: Type yes when asked about
+fingerprint, then enter your password. You
+won't see characters as you type.
+
+18
+00:01:42,399 --> 00:01:49,199
+Step 14: Update system packages. Run: apt
+update && apt upgrade -y. Wait 1 to 3
+minutes.
+
+19
+00:01:49,199 --> 00:01:55,599
+Step 15: Install Node.js. Run: curl -fsSL
+https://deb.nodesource.com/setup_20.x |
+bash - then apt install -y nodejs
+
+20
+00:01:55,599 --> 00:02:00,399
+Step 16: Verify Node installation. Run:
+node --version. You should see v20.x.x
+
+21
+00:02:00,399 --> 00:02:06,799
+Step 17: Install OpenClaw. Run: npm
+install -g openclaw. Wait 1 to 2 minutes
+for installation.
+
+22
+00:02:06,799 --> 00:02:12,799
+Step 18: Start OpenClaw setup. Run:
+openclaw gateway start. You'll be asked
+several configuration questions.
+
+23
+00:02:12,799 --> 00:02:18,399
+Choose anthropic as your model provider
+and enter your Anthropic API key from
+console.anthropic.com
+
+24
+00:02:18,399 --> 00:02:24,399
+Step 19: Connect WhatsApp. A QR code will
+appear. Open WhatsApp on your phone, tap
+
+25
+00:02:24,399 --> 00:02:25,599
+a
+a Device.
+
+26
+00:02:25,599 --> 00:02:31,199
+Scan the QR code on your computer screen
+and wait for the Connected message.
+
+27
+00:02:31,199 --> 00:02:37,199
+Congratulations! OpenClaw is now running
+24/7. Send a WhatsApp message to test your
+AI assistant.
+
+28
+00:02:37,199 --> 00:02:42,799
+For help and documentation, visit
+openclaw.ai or join the Discord community.
+Thanks for watching!

@@ -1,0 +1,100 @@
+{
+  "agents": {
+    "1": {
+      "id": 1,
+      "name": "AdWords Pro",
+      "model": "claude-code",
+      "usesLLM": true,
+      "cronJobId": null
+    },
+    "2": {
+      "id": 2,
+      "name": "Meta Maven",
+      "model": "claude-code",
+      "usesLLM": true,
+      "cronJobId": null
+    },
+    "3": {
+      "id": 3,
+      "name": "Lead Hunter",
+      "model": "claude-code",
+      "usesLLM": false,
+      "cronJobId": "80dc60bb-4b71-41d7-a7c7-7e0b318eae5a",
+      "note": "Uses Node.js scripts for email/prospecting, not LLM"
+    },
+    "5": {
+      "id": 5,
+      "name": "News Scout",
+      "model": "sonnet",
+      "usesLLM": true,
+      "cronJobId": "c5a88ffe-52e6-4da8-82f7-9538c56f8ebd"
+    },
+    "10": {
+      "id": 10,
+      "name": "Inbox Ninja",
+      "model": "sonnet",
+      "usesLLM": true,
+      "cronJobId": null
+    },
+    "11": {
+      "id": 11,
+      "name": "Video Wizard",
+      "model": "runway",
+      "usesLLM": false,
+      "note": "Uses Runway API for video generation, not LLM"
+    },
+    "12": {
+      "id": 12,
+      "name": "Script Writer",
+      "model": "sonnet",
+      "usesLLM": true,
+      "cronJobId": null
+    },
+    "13": {
+      "id": 13,
+      "name": "YouTube Agent",
+      "model": "youtube-api",
+      "usesLLM": false,
+      "cronJobId": null,
+      "note": "Uses YouTube Data API v3 for uploads, not LLM"
+    },
+    "14": {
+      "id": 14,
+      "name": "Caption Creator",
+      "model": "local",
+      "usesLLM": false,
+      "cronJobId": null,
+      "note": "Generates SRT captions from scripts, local processing"
+    },
+    "15": {
+      "id": 15,
+      "name": "Music Composer",
+      "model": "inference-sh",
+      "usesLLM": false,
+      "cronJobId": null,
+      "note": "Uses inference.sh Diffrythm for background music generation"
+    }
+  },
+  "modelAliases": {
+    "sonnet-4.5": "anthropic/claude-sonnet-4-5",
+    "sonnet-3.5": "anthropic/claude-3-5-sonnet-20241022",
+    "opus-4": "anthropic/claude-opus-4",
+    "opus-3.5": "anthropic/claude-3-5-opus-20240307",
+    "haiku-4": "anthropic/claude-haiku-4",
+    "haiku-3.5": "anthropic/claude-3-5-haiku-20241022",
+    "claude-code": "anthropic/claude-code",
+    "runway-veo": "runway-veo3.1_fast",
+    "runway-gen4": "runway-gen4.5"
+  },
+  "modelDisplayNames": {
+    "sonnet-4.5": "Claude Sonnet 4.5 (Latest)",
+    "sonnet-3.5": "Claude Sonnet 3.5",
+    "opus-4": "Claude Opus 4 (Best)",
+    "opus-3.5": "Claude Opus 3.5",
+    "haiku-4": "Claude Haiku 4 (Fast)",
+    "haiku-3.5": "Claude Haiku 3.5",
+    "claude-code": "Claude Code",
+    "runway-veo": "Runway Veo 3.1 (Fast)",
+    "runway-gen4": "Runway Gen 4.5 (Quality)"
+  }
+}

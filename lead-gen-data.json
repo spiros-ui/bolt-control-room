@@ -1,0 +1,102 @@
+[
+  {
+    "campaign": "Medical Spas",
+    "businessName": "180 Medical Spa",
+    "firstName": "Sandy",
+    "lastName": "Hutnick",
+    "email": "sandy@180medspa.com",
+    "website": "http://180medspa.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  },
+  {
+    "campaign": "Medical Spas",
+    "businessName": "Skin Care Esthetics",
+    "firstName": "Idami",
+    "lastName": "Calderon",
+    "email": "idami@skincareesthetics.com",
+    "website": "http://skincareesthetics.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  },
+  {
+    "campaign": "Medical Spas",
+    "businessName": "GLO Skins",
+    "firstName": "Meko",
+    "lastName": "Price",
+    "email": "meko@glo-skins.com",
+    "website": "http://glo-skins.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  },
+  {
+    "campaign": "Medical Spas",
+    "businessName": "Timeless Skin Solutions",
+    "firstName": "Jeanne",
+    "lastName": "Owens",
+    "email": "jowens@timelessskin.com",
+    "website": "http://timelessskin.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  },
+  {
+    "campaign": "Medical Spas",
+    "businessName": "Saintly Skin",
+    "firstName": "Megan",
+    "lastName": "Naccari",
+    "email": "megan@saintlyskin.com",
+    "website": "http://saintlyskin.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  },
+  {
+    "campaign": "Dentists",
+    "businessName": "Real Dental",
+    "firstName": "Ruchika",
+    "lastName": "Khetarpal",
+    "email": "drrkhetarpal@cincinnati-dental.com",
+    "website": "http://cincinnati-dental.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  },
+  {
+    "campaign": "Dentists",
+    "businessName": "Piedmont Family Dentistry",
+    "firstName": "Bianca",
+    "lastName": "Tiaona",
+    "email": "biianca@piedmont-family-dentistry.com",
+    "website": "http://piedmont-family-dentistry.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  },
+  {
+    "campaign": "Dentists",
+    "businessName": "Fullerton Orthodontics",
+    "firstName": "Bubba",
+    "lastName": "Fullerton",
+    "email": "drb@bubbabrackett.com",
+    "website": "http://bubbabrackett.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  },
+  {
+    "campaign": "Dentists",
+    "businessName": "Dwight H Pate D Dentistry",
+    "firstName": "Dwight",
+    "lastName": "Pate",
+    "email": "formz@drpatedmd.com",
+    "website": "http://drpatedmd.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  },
+  {
+    "campaign": "Dentists",
+    "businessName": "Total Health Dental Care",
+    "firstName": "Khaja",
+    "lastName": "Mohsinuddin",
+    "email": "drkhaja@totalhealth-dental.com",
+    "website": "http://totalhealth-dental.com",
+    "status": "Not Contacted",
+    "lastContact": null
+  }
+]

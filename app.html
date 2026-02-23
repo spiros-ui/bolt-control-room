@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
+    <title>Bolt's Control Room - Live</title>
+    <link rel="manifest" href="./manifest.json">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+        
+        #loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        
+        .loading-content {
+            text-align: center;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(99, 102, 241, 0.2);
+            border-top-color: #6366f1;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 18px;
+            font-weight: 600;
+            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .loading-subtext {
+            font-size: 14px;
+            color: #94a3b8;
+            margin-top: 8px;
+        }
+        
+        #app-frame {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+        
+        .status-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(99, 102, 241, 0.3);
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            z-index: 1000;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .status-dot.offline {
+            background: #ef4444;
+            animation: none;
+        }
+        
+        .reload-btn {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border: none;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .reload-btn:active {
+            transform: scale(0.95);
+        }
+        
+        /* Install prompt */
+        .install-prompt {
+            position: fixed;
+            bottom: 60px;
+            left: 16px;
+            right: 16px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 999;
+        }
+        
+        .install-prompt.show {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .install-prompt h3 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .install-prompt p {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+        
+        .install-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .install-actions button {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .install-yes {
+            background: white;
+            color: #6366f1;
+        }
+        
+        .install-no {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">Bolt's Control Room</div>
+            <div class="loading-subtext">Initializing live dashboard...</div>
+        </div>
+    </div>
+    
+    <iframe id="app-frame" src="http://138.68.161.145:8086/"></iframe>
+    
+    <div class="status-bar">
+        <div class="status-indicator">
+            <div class="status-dot" id="statusDot"></div>
+            <span id="statusText">Connected</span>
+        </div>
+        <button class="reload-btn" onclick="reloadDashboard()">REFRESH</button>
+    </div>
+    
+    <div class="install-prompt" id="installPrompt">
+        <h3>Install Control Room App</h3>
+        <p>Add to your home screen for quick access</p>
+        <div class="install-actions">
+            <button class="install-yes" onclick="installApp()">Install</button>
+            <button class="install-no" onclick="dismissInstall()">Not Now</button>
+        </div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        const frame = document.getElementById('app-frame');
+        const loading = document.getElementById('loading');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const installPrompt = document.getElementById('installPrompt');
+        
+        // Load iframe
+        frame.onload = function() {
+            setTimeout(() => {
+                loading.style.display = 'none';
+                frame.style.display = 'block';
+                checkConnection();
+            }, 1000);
+        };
+        
+        // Check connection status
+        function checkConnection() {
+            fetch('http://138.68.161.145:8086/')
+                .then(() => {
+                    statusDot.classList.remove('offline');
+                    statusText.textContent = 'Live';
+                })
+                .catch(() => {
+                    statusDot.classList.add('offline');
+                    statusText.textContent = 'Offline';
+                });
+        }
+        
+        // Reload dashboard
+        function reloadDashboard() {
+            frame.src = frame.src;
+            checkConnection();
+        }
+        
+        // Auto-refresh connection status every 30s
+        setInterval(checkConnection, 30000);
+        
+        // PWA Install
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install prompt after 3 seconds
+            setTimeout(() => {
+                if (!localStorage.getItem('installDismissed')) {
+                    installPrompt.classList.add('show');
+                }
+            }, 3000);
+        });
+        
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('User accepted install');
+                    }
+                    deferredPrompt = null;
+                    installPrompt.classList.remove('show');
+                });
+            }
+        }
+        
+        function dismissInstall() {
+            localStorage.setItem('installDismissed', 'true');
+            installPrompt.classList.remove('show');
+        }
+        
+        // Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js').catch(() => {
+                console.log('Service worker registration skipped');
+            });
+        }
+    </script>
+</body>
+</html>

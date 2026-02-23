@@ -1,0 +1,4 @@
+✅ Mission Control server running on http://localhost:8086
+📊 Task API: http://localhost:8086/api/tasks
+📡 Live Feed: http://localhost:8086/api/live-feed
+💰 Cost Tracking: http://localhost:8086/api/cost-tracking

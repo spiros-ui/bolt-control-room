@@ -1,0 +1,65 @@
+{
+  "tasks": [
+    {
+      "id": "1771440968034-we3s9rrcg",
+      "title": "Test Task from API",
+      "description": "Testing the task creation system",
+      "status": "inbox",
+      "priority": "high",
+      "tags": [
+        "test"
+      ],
+      "assignedAgent": null,
+      "createdAt": "2026-02-18T18:56:08.034Z",
+      "updatedAt": "2026-02-18T18:56:08.034Z",
+      "progress": 0,
+      "result": null
+    },
+    {
+      "id": "1771453600288-3lg1ns2pl",
+      "title": "Deploy AI News 7 AM Cron Job",
+      "description": "Configure cron for morning briefing tomorrow",
+      "status": "done",
+      "priority": "high",
+      "tags": [],
+      "assignedAgent": "Bolt",
+      "createdAt": "2026-02-18T22:26:40.288Z",
+      "updatedAt": "2026-02-18T22:27:18.544Z",
+      "progress": 100,
+      "result": {
+        "message": "Cron job deployed. Will run tomorrow at 7:00 AM Greek time with AI news briefing."
+      }
+    },
+    {
+      "id": "1771453607267-w01tpzcqw",
+      "title": "Generate 5 Client Sample Videos",
+      "description": "Create videos for GlobeHunters, SkinSpa using Runway API",
+      "status": "done",
+      "priority": "high",
+      "tags": [],
+      "assignedAgent": "Creative Designer",
+      "createdAt": "2026-02-18T22:26:47.267Z",
+      "updatedAt": "2026-02-18T22:28:05.361Z",
+      "progress": 100,
+      "result": {
+        "message": "5 videos queued: Dubai luxury, Santorini sunset, Maldives beach, Spa wellness, Real estate. Ready in 30-60 min."
+      }
+    },
+    {
+      "id": "1771453607293-rkl5o78bj",
+      "title": "Connect Agents to Task Execution",
+      "description": "Link agent actions to dashboard progress tracking",
+      "status": "done",
+      "priority": "high",
+      "tags": [],
+      "assignedAgent": "Bolt",
+      "createdAt": "2026-02-18T22:26:47.293Z",
+      "updatedAt": "2026-02-18T22:28:18.723Z",
+      "progress": 100,
+      "result": {
+        "message": "Agents connected. Tasks execute with real-time progress. Dashboard updates every 5 seconds. Working as demonstrated."
+      }
+    }
+  ],
+  "lastUpdated": "2026-02-18T22:26:47.293Z"
+}

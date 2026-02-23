@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control | Task Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f6f8;
+            padding: 16px;
+            color: #1a1a1a;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+        .refresh-note {
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        /* Stats Grid */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        /* Sections */
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .section h2 {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 12px;
+        }
+        
+        /* Agents Grid */
+        .agents {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 12px;
+        }
+        .agent-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 14px;
+            border-radius: 10px;
+        }
+        .agent-card strong {
+            font-size: 15px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .agent-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-top: 8px;
+            opacity: 0.95;
+        }
+        
+        /* Tasks Columns */
+        .tasks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+        }
+        .task-column h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #4b5563;
+        }
+        .task-count {
+            background: #667eea;
+            color: white;
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 6px;
+        }
+        .task-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+        .task-title {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #1f2937;
+        }
+        .task-desc {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #9ca3af;
+        }
+        
+        /* Costs Table */
+        .cost-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .cost-row:last-child {
+            border-bottom: none;
+        }
+        .cost-agent {
+            font-size: 13px;
+            color: #374151;
+        }
+        .cost-amount {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .header h1 { font-size: 20px; }
+            .stat-value { font-size: 24px; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .agents { grid-template-columns: 1fr; }
+            .tasks { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🚀 Mission Control Dashboard</h1>
+        <div class="refresh-note">Auto-refresh: Reload page for latest data</div>
+    </div>
+
+    <div class="stats" id="stats">
+        <div class="stat-card">
+            <div class="stat-value">-</div>
+            <div class="stat-label">Total Tasks</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">-</div>
+            <div class="stat-label">Active Agents</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">-</div>
+            <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value">-</div>
+            <div class="stat-label">Total Cost</div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>👥 Active Agents</h2>
+        <div class="agents" id="agents">
+            <p style="color: #9ca3af;">Loading agents...</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📋 Tasks</h2>
+        <div class="tasks" id="tasks">
+            <p style="color: #9ca3af;">Loading tasks...</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>💰 Cost Tracking</h2>
+        <div id="costs">
+            <p style="color: #9ca3af;">Loading cost data...</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://138.68.161.145:8086';
+        
+        async function loadDashboard() {
+            try {
+                // Load all data in parallel
+                const [tasksRes, costsRes] = await Promise.all([
+                    fetch(API_BASE + '/tasks.json?t=' + Date.now()),
+                    fetch(API_BASE + '/cost-tracking-data.json?t=' + Date.now())
+                ]);
+                
+                const tasksData = await tasksRes.json();
+                const costsData = await costsRes.json();
+                
+                // Render stats
+                const tasks = tasksData.tasks || [];
+                const activeAgents = new Set(tasks.map(t => t.assignedAgent).filter(Boolean)).size;
+                const completedTasks = tasks.filter(t => t.status === 'done').length;
+                const totalCost = costsData.totals?.totalCost || 0;
+                
+                document.getElementById('stats').innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-value">${tasks.length}</div>
+                        <div class="stat-label">Total Tasks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${activeAgents}</div>
+                        <div class="stat-label">Active Agents</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${completedTasks}</div>
+                        <div class="stat-label">Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">$${totalCost.toFixed(2)}</div>
+                        <div class="stat-label">Total Cost</div>
+                    </div>
+                `;
+                
+                renderAgents(costsData.agents || []);
+                renderTasks(tasks);
+                renderCosts(costsData);
+                
+            } catch (error) {
+                console.error('Failed to load dashboard:', error);
+                document.getElementById('stats').innerHTML = '<p style="color: #ef4444;">Failed to load data. Check console.</p>';
+            }
+        }
+        
+        function renderAgents(agents) {
+            if (!agents || agents.length === 0) {
+                document.getElementById('agents').innerHTML = '<p style="color: #9ca3af;">No agents found.</p>';
+                return;
+            }
+            
+            const activeAgents = agents.filter(a => (a.tasksCompleted || 0) > 0 || (a.totalCost || 0) > 0);
+            
+            document.getElementById('agents').innerHTML = activeAgents.map(agent => `
+                <div class="agent-card">
+                    <strong>${agent.emoji || '🤖'} ${agent.name}</strong>
+                    <div style="font-size: 13px; color: #6b7280;">${agent.fullName}</div>
+                    <div class="agent-meta">
+                        <span>${agent.tasksCompleted || 0} tasks</span>
+                        <span>$${(agent.totalCost || 0).toFixed(2)}</span>
+                    </div>
+                </div>
+            `).join('') || '<p style="color: #9ca3af;">No active agents yet.</p>';
+        }
+        
+        function renderTasks(tasks) {
+            if (!tasks || tasks.length === 0) {
+                document.getElementById('tasks').innerHTML = '<p style="color: #9ca3af;">No tasks found.</p>';
+                return;
+            }
+            
+            const columns = {
+                inbox: tasks.filter(t => t.status === 'inbox'),
+                assigned: tasks.filter(t => t.status === 'assigned'),
+                'in-progress': tasks.filter(t => t.status === 'in-progress' || t.status === 'in_progress'),
+                done: tasks.filter(t => t.status === 'done')
+            };
+            
+            const columnTitles = {
+                inbox: '📥 Inbox',
+                assigned: '👤 Assigned',
+                'in-progress': '⚡ In Progress',
+                done: '✅ Done'
+            };
+            
+            document.getElementById('tasks').innerHTML = Object.keys(columns).map(status => `
+                <div class="task-column">
+                    <h3>
+                        ${columnTitles[status]}
+                        <span class="task-count">${columns[status].length}</span>
+                    </h3>
+                    ${columns[status].map(task => `
+                        <div class="task-card">
+                            <div class="task-title">${task.title}${task.recurring ? ' 🔄' : ''}</div>
+                            ${task.description ? `<div class="task-desc">${task.description.substring(0, 80)}${task.description.length > 80 ? '...' : ''}</div>` : ''}
+                            <div class="task-footer">
+                                <span>${task.assignedAgent || 'Unassigned'}</span>
+                                <span>${task.priority || 'normal'}</span>
+                            </div>
+                        </div>
+                    `).join('') || '<p style="color: #9ca3af; font-size: 12px;">No tasks</p>'}
+                </div>
+            `).join('');
+        }
+        
+        function renderCosts(costsData) {
+            if (!costsData.agents || costsData.agents.length === 0) {
+                document.getElementById('costs').innerHTML = '<p style="color: #9ca3af;">No cost data available.</p>';
+                return;
+            }
+            
+            const agentsWithCost = costsData.agents.filter(a => (a.totalCost || 0) > 0);
+            
+            document.getElementById('costs').innerHTML = `
+                <div class="cost-row" style="background: #667eea; color: white;">
+                    <div class="cost-agent">Total</div>
+                    <div class="cost-amount" style="color: white;">$${costsData.totals.totalCost.toFixed(2)}</div>
+                </div>
+                ${agentsWithCost.map(agent => `
+                    <div class="cost-row">
+                        <div class="cost-agent">${agent.name}</div>
+                        <div class="cost-amount">$${(agent.totalCost || 0).toFixed(2)}</div>
+                    </div>
+                `).join('') || '<p style="color: #9ca3af; font-size: 13px; padding: 12px;">No cost data yet.</p>'}
+            `;
+        }
+        
+        // Load on page load
+        loadDashboard();
+    </script>
+</body>
+</html>

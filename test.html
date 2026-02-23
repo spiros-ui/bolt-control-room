@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><title>Mission Control Test</title></head>
+<body>
+<h1>Testing Data Load</h1>
+<pre id="output">Loading...</pre>
+<script>
+async function test() {
+  const out = document.getElementById('output');
+  try {
+    const tasks = await fetch('./tasks.json?t=' + Date.now()).then(r => r.json());
+    const cost = await fetch('./cost-tracking-data.json?t=' + Date.now()).then(r => r.json());
+    const feed = await fetch('./live-feed.json?t=' + Date.now()).then(r => r.json());
+    
+    out.textContent = JSON.stringify({
+      tasks: tasks.tasks?.length || 0,
+      agents: cost.agents?.length || 0,
+      totalCost: cost.totals?.totalCost || 0,
+      feedEvents: feed.events?.length || 0
+    }, null, 2);
+  } catch(e) {
+    out.textContent = 'Error: ' + e.message;
+  }
+}
+test();
+</script>
+</body>
+</html>

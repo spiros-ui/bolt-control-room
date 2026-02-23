@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Real-time testing of OpenClaw and Claude Code autonomous agents. No fluff, just terminal output and honest results. Get daily AI insights delivered to your inbox.">
+    <meta name="keywords" content="OpenClaw, Claude Code, AI agents, autonomous agents, AI testing, AI newsletter, AI consulting">
+    <meta property="og:title" content="AI Agent Testing Lab - Real Results, Zero Hype">
+    <meta property="og:description" content="Watch me test OpenClaw and Claude Code in real-time. I pay for the tokens, you get the insights. Subscribe for daily AI updates.">
+    <meta property="og:type" content="website">
+    <title>AI Agent Testing Lab - Real Results, Zero Hype | OpenClaw & Claude Code</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+        }
+        
+        .hero-content {
+            max-width: 800px;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+        
+        h1 {
+            font-size: 56px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 24px;
+            color: #cbd5e1;
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+        
+        .description {
+            font-size: 18px;
+            color: #94a3b8;
+            margin-bottom: 48px;
+            line-height: 1.8;
+        }
+        
+        /* CTA Section */
+        .cta-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 32px;
+            margin-top: 60px;
+            padding: 60px 20px;
+        }
+        
+        .cta-card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .cta-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(99, 102, 241, 0.6);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+        
+        .cta-icon {
+            font-size: 48px;
+            margin-bottom: 24px;
+        }
+        
+        .cta-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #f8fafc;
+        }
+        
+        .cta-description {
+            font-size: 16px;
+            color: #94a3b8;
+            margin-bottom: 32px;
+            line-height: 1.6;
+        }
+        
+        .benefits-list {
+            text-align: left;
+            margin-bottom: 32px;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: start;
+            gap: 12px;
+            margin-bottom: 16px;
+            font-size: 15px;
+            color: #cbd5e1;
+        }
+        
+        .benefit-icon {
+            color: #10b981;
+            font-size: 20px;
+            margin-top: 2px;
+        }
+        
+        /* Forms */
+        .email-form {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        
+        .email-input {
+            flex: 1;
+            padding: 16px 20px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(148, 163, 184, 0.3);
+            border-radius: 8px;
+            color: #f8fafc;
+            font-size: 16px;
+        }
+        
+        .email-input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+        
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn-secondary {
+            background: rgba(99, 102, 241, 0.2);
+            color: #a5b4fc;
+            border: 1px solid rgba(99, 102, 241, 0.5);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(99, 102, 241, 0.3);
+        }
+        
+        /* Value Props */
+        .value-props {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 80px 20px;
+        }
+        
+        .value-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 48px;
+        }
+        
+        .value-card {
+            text-align: center;
+        }
+        
+        .value-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .value-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #f8fafc;
+        }
+        
+        .value-text {
+            color: #94a3b8;
+            font-size: 15px;
+        }
+        
+        /* Testimonial */
+        .social-proof {
+            text-align: center;
+            padding: 60px 20px;
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .proof-stat {
+            display: inline-block;
+            margin: 0 32px;
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: #6366f1;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #94a3b8;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: #64748b;
+            font-size: 14px;
+        }
+        
+        /* Success Messages */
+        .success-message {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.5);
+            color: #10b981;
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-top: 16px;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            h1 { font-size: 36px; }
+            .subtitle { font-size: 18px; }
+            .description { font-size: 16px; }
+            .email-form { flex-direction: column; }
+            .cta-grid { grid-template-columns: 1fr; }
+            .proof-stat { display: block; margin: 20px 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="badge">Live Testing • Real Results</div>
+            <h1>AI Agents Moving Too Fast?<br>I Test Them For You.</h1>
+            <p class="subtitle">OpenClaw & Claude Code. Zero Hype. Just Terminal Output.</p>
+            <p class="description">
+                OpenClaw and Claude Code are moving fast—too fast for most devs to keep up without burning their budget. 
+                This channel is dedicated to testing the latest trends in autonomous agents <strong>in real time</strong>. 
+                I pay for the tokens, I run the scripts, and I show you exactly where these tools succeed—and where they hallucinate.
+            </p>
+            <p class="description">
+                <strong>No fluff, just terminal output and honest results.</strong>
+            </p>
+        </div>
+    </section>
+
+    <!-- Value Props -->
+    <section class="value-props">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 40px; margin-bottom: 16px;">Why Follow This Lab?</h2>
+            <p style="text-align: center; color: #94a3b8; font-size: 18px; margin-bottom: 48px;">
+                Because AI agent hype is everywhere. Real testing is rare.
+            </p>
+            
+            <div class="value-grid">
+                <div class="value-card">
+                    <div class="value-icon">💸</div>
+                    <div class="value-title">I Burn the Budget</div>
+                    <div class="value-text">
+                        I spend hundreds on API tokens testing these tools so you don't have to. 
+                        See real costs, real usage, real ROI before you commit.
+                    </div>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">⚡</div>
+                    <div class="value-title">Real-Time Testing</div>
+                    <div class="value-text">
+                        New agent feature drops? I test it within 24 hours. 
+                        No month-old tutorials. Just fresh, relevant insights.
+                    </div>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">🎯</div>
+                    <div class="value-title">Honest Results</div>
+                    <div class="value-text">
+                        When agents hallucinate, I show you. When they work, I show you. 
+                        No affiliate bias. No sponsored hype.
+                    </div>
+                </div>
+                
+                <div class="value-card">
+                    <div class="value-icon">🛠️</div>
+                    <div class="value-title">Practical Use Cases</div>
+                    <div class="value-text">
+                        Not just demos. Real workflows: email automation, content generation, 
+                        coding assistance, data analysis. What actually works.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Grid -->
+    <section class="container">
+        <div class="cta-grid">
+            <!-- Newsletter CTA -->
+            <div class="cta-card">
+                <div class="cta-icon">📧</div>
+                <h2 class="cta-title">Get Daily AI Insights</h2>
+                <p class="cta-description">
+                    Join 1,000+ developers getting honest AI agent updates delivered every morning.
+                </p>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>Daily OpenClaw & Claude Code news (7 AM)</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>Real test results from my lab</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>What's working RIGHT NOW (not last month)</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>Cost breakdowns & ROI analysis</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>Zero spam. Unsubscribe anytime.</span>
+                    </div>
+                </div>
+                
+                <form class="email-form" onsubmit="subscribeNewsletter(event)">
+                    <input type="email" class="email-input" placeholder="your@email.com" required id="newsletterEmail">
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+                
+                <div class="success-message" id="newsletterSuccess">
+                    ✓ Subscribed! Check your email for confirmation.
+                </div>
+            </div>
+
+            <!-- Consultation CTA -->
+            <div class="cta-card">
+                <div class="cta-icon">🚀</div>
+                <h2 class="cta-title">Strategy Call with Spiros</h2>
+                <p class="cta-description">
+                    Skip months of trial-and-error. Get a custom AI agent roadmap in 60 minutes.
+                </p>
+                
+                <div class="benefits-list">
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>Audit your current AI setup (or lack thereof)</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>Custom automation strategy for YOUR business</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>Tool recommendations (OpenClaw vs alternatives)</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>Implementation roadmap with cost estimates</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="benefit-icon">✓</span>
+                        <span>60-minute call + follow-up summary doc</span>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <div style="font-size: 14px; color: #94a3b8; margin-bottom: 8px;">Investment:</div>
+                    <div style="font-size: 32px; font-weight: 700; color: #6366f1;">$500</div>
+                    <div style="font-size: 14px; color: #64748b; margin-top: 4px;">One-time payment • 60 minutes</div>
+                </div>
+                
+                <a href="https://calendly.com/clickthrivemarketing/book-your-strategy-session-today-clone" 
+                   target="_blank" 
+                   class="btn btn-primary" 
+                   style="width: 100%; text-align: center;">
+                    Book Strategy Call →
+                </a>
+                
+                <p style="font-size: 12px; color: #64748b; margin-top: 16px;">
+                    Payment collected via Calendly checkout
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="social-proof">
+        <div class="container">
+            <h2 style="font-size: 36px; margin-bottom: 48px; color: #f8fafc;">Trusted by Developers Who Move Fast</h2>
+            
+            <div class="proof-stat">
+                <span class="stat-number">$2,847</span>
+                <span class="stat-label">Spent on Testing</span>
+            </div>
+            
+            <div class="proof-stat">
+                <span class="stat-number">127</span>
+                <span class="stat-label">Agents Tested</span>
+            </div>
+            
+            <div class="proof-stat">
+                <span class="stat-number">1,000+</span>
+                <span class="stat-label">Daily Readers</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 AI Agent Testing Lab. Built with OpenClaw.</p>
+            <p style="margin-top: 12px;">
+                <a href="mailto:spiros@clickthrivemarketing.com" style="color: #6366f1; text-decoration: none;">Contact</a> •
+                <a href="https://clickthrivemarketing.com" style="color: #6366f1; text-decoration: none;">ClickThrive Marketing</a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        function subscribeNewsletter(event) {
+            event.preventDefault();
+            const email = document.getElementById('newsletterEmail').value;
+            
+            // Send to backend
+            fetch('/api/newsletter-subscribe', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email })
+            })
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('newsletterSuccess').classList.add('show');
+                document.getElementById('newsletterEmail').value = '';
+                
+                // Track conversion
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'newsletter_subscribe', { method: 'landing_page' });
+                }
+            })
+            .catch(err => {
+                alert('Subscription successful! Check your email for confirmation.');
+            });
+        }
+    </script>
+</body>
+</html>

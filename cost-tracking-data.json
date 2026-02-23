@@ -1,0 +1,206 @@
+{
+  "agents": [
+    {
+      "id": 1,
+      "name": "AdWords Pro",
+      "emoji": "🎯",
+      "fullName": "Google Ads Specialist",
+      "model": "claude-code",
+      "status": "building",
+      "totalCalls": 0,
+      "totalCost": 0,
+      "tasksCompleted": 0
+    },
+    {
+      "id": 2,
+      "name": "Meta Maven",
+      "emoji": "📘",
+      "fullName": "Meta Ads Specialist",
+      "model": "claude-code",
+      "status": "building",
+      "totalCalls": 0,
+      "totalCost": 0,
+      "tasksCompleted": 0
+    },
+    {
+      "id": 3,
+      "name": "Lead Hunter",
+      "emoji": "🎣",
+      "fullName": "Lead Gen Machine",
+      "model": "claude-code",
+      "status": "active",
+      "totalCalls": 12,
+      "totalCost": 0.024,
+      "tasksCompleted": 5
+    },
+    {
+      "id": 5,
+      "name": "News Scout",
+      "emoji": "📰",
+      "fullName": "AI News Researcher",
+      "model": "sonnet",
+      "status": "active",
+      "totalCalls": 8,
+      "totalCost": 0.016,
+      "tasksCompleted": 3
+    },
+    {
+      "id": 10,
+      "name": "Inbox Ninja",
+      "emoji": "📧",
+      "fullName": "Inbox Whisperer",
+      "model": "sonnet",
+      "status": "building",
+      "totalCalls": 0,
+      "totalCost": 0,
+      "tasksCompleted": 0
+    },
+    {
+      "id": 11,
+      "name": "Video Wizard",
+      "emoji": "🎬",
+      "fullName": "Creative Designer",
+      "model": "runway",
+      "status": "active",
+      "totalCalls": 13,
+      "totalCost": 1.04,
+      "tasksCompleted": 2
+    },
+    {
+      "id": 12,
+      "name": "Script Writer",
+      "emoji": "✍️",
+      "fullName": "Content Script Creator",
+      "model": "sonnet",
+      "status": "active",
+      "totalCalls": 0,
+      "totalCost": 0,
+      "tasksCompleted": 0
+    },
+    {
+      "id": 13,
+      "name": "YouTube Agent",
+      "emoji": "📺",
+      "fullName": "YouTube Upload Automation",
+      "model": "youtube-api",
+      "status": "active",
+      "totalCalls": 4,
+      "totalCost": 0,
+      "tasksCompleted": 4
+    },
+    {
+      "id": 14,
+      "name": "Caption Creator",
+      "emoji": "💬",
+      "fullName": "SRT Caption Generator",
+      "model": "local",
+      "status": "active",
+      "totalCalls": 2,
+      "totalCost": 0,
+      "tasksCompleted": 2
+    },
+    {
+      "id": 15,
+      "name": "Music Composer",
+      "emoji": "🎵",
+      "fullName": "AI Music Generation",
+      "model": "inference-sh",
+      "status": "setup-required",
+      "totalCalls": 0,
+      "totalCost": 0,
+      "tasksCompleted": 0
+    }
+  ],
+  "usage": [
+    {
+      "date": "2026-02-19",
+      "agent": "Video Wizard",
+      "task": "Maldives 32-second video",
+      "model": "runway-veo3.1_fast",
+      "calls": 8,
+      "cost": 0.64,
+      "timestamp": "2026-02-19T05:28:00.000Z"
+    },
+    {
+      "date": "2026-02-19",
+      "agent": "Video Wizard",
+      "task": "ClickThrive 20-second promo",
+      "model": "runway-veo3.1_fast",
+      "calls": 5,
+      "cost": 0.4,
+      "timestamp": "2026-02-19T20:41:00.000Z"
+    },
+    {
+      "date": "2026-02-19",
+      "agent": "Lead Hunter",
+      "task": "Miami dentist campaigns (5 emails)",
+      "model": "claude-code",
+      "calls": 12,
+      "cost": 0.024,
+      "timestamp": "2026-02-19T07:42:00.000Z"
+    },
+    {
+      "date": "2026-02-19",
+      "agent": "News Scout",
+      "task": "Morning AI briefing",
+      "model": "claude-code",
+      "calls": 8,
+      "cost": 0.016,
+      "timestamp": "2026-02-19T04:30:00.000Z"
+    },
+    {
+      "date": "2026-02-21",
+      "agent": "YouTube Agent",
+      "task": "Test upload - ClickThrive promo",
+      "model": "youtube-api",
+      "calls": 1,
+      "cost": 0,
+      "timestamp": "2026-02-21T17:40:17.000Z"
+    },
+    {
+      "date": "2026-02-22",
+      "agent": "YouTube Agent",
+      "task": "ClickThrive promo with captions",
+      "model": "youtube-api",
+      "calls": 1,
+      "cost": 0,
+      "timestamp": "2026-02-22T19:13:16.515Z"
+    },
+    {
+      "date": "2026-02-22",
+      "agent": "Caption Creator",
+      "task": "ClickThrive captions (SRT)",
+      "model": "local",
+      "calls": 1,
+      "cost": 0,
+      "timestamp": "2026-02-22T19:13:16.521Z"
+    },
+    {
+      "date": "2026-02-22",
+      "agent": "YouTube Agent",
+      "task": "ClickThrive promo with captions (re-upload)",
+      "model": "youtube-api",
+      "calls": 1,
+      "cost": 0,
+      "timestamp": "2026-02-22T19:55:27.519Z"
+    },
+    {
+      "date": "2026-02-22",
+      "agent": "YouTube Agent",
+      "task": "ClickThrive with music + captions (final)",
+      "model": "youtube-api",
+      "calls": 1,
+      "cost": 0,
+      "timestamp": "2026-02-22T20:13:06.882Z"
+    }
+  ],
+  "totals": {
+    "totalCost": 1.12,
+    "totalCalls": 37,
+    "totalTasks": 14,
+    "avgCostPerTask": 0.112,
+    "todayCost": 1.12,
+    "monthCost": 1.12
+  },
+  "lastUpdated": "2026-02-22T20:13:06.883Z"
+}

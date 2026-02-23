@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control | Live Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f6f8;
+            color: #1a1a1a;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        
+        /* Live Feed Sidebar */
+        .live-feed-sidebar {
+            width: 400px;
+            background: white;
+            border-left: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .live-feed-header {
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .live-feed-header h2 {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+        .live-feed-subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .live-feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+        .feed-event {
+            background: #f9fafb;
+            border-left: 3px solid #667eea;
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .feed-event.chat_message {
+            border-left-color: #10b981;
+        }
+        .feed-event.task_created,
+        .feed-event.task_assigned,
+        .feed-event.task_status_changed {
+            border-left-color: #f59e0b;
+        }
+        .feed-event.agent_message {
+            border-left-color: #8b5cf6;
+        }
+        .feed-event.video_download {
+            border-left-color: #ec4899;
+        }
+        .feed-event.notification {
+            border-left-color: #3b82f6;
+        }
+        .feed-timestamp {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+        .feed-source {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-right: 6px;
+        }
+        .feed-source.user { background: #10b981; }
+        .feed-source.bot { background: #667eea; }
+        .feed-source.agent { background: #8b5cf6; }
+        .feed-source.system { background: #6b7280; }
+        .feed-message {
+            color: #374151;
+            line-height: 1.4;
+        }
+        
+        /* Header */
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 24px;
+            color: #667eea;
+        }
+        .create-task-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        /* Section */
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .section h2 {
+            font-size: 18px;
+            color: #667eea;
+            margin-bottom: 12px;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .main-content { height: 60vh; }
+            .live-feed-sidebar { width: 100%; height: 40vh; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>🚀 Mission Control</h1>
+            <button class="create-task-btn" onclick="alert('Create task - TODO')">+ Create Task</button>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card"><div class="stat-value">-</div><div class="stat-label">Tasks</div></div>
+            <div class="stat-card"><div class="stat-value">-</div><div class="stat-label">Agents</div></div>
+            <div class="stat-card"><div class="stat-value">-</div><div class="stat-label">Completed</div></div>
+            <div class="stat-card"><div class="stat-value">-</div><div class="stat-label">Cost</div></div>
+        </div>
+
+        <div class="section">
+            <h2>📋 Quick Stats</h2>
+            <p>Full dashboard content - tasks, agents, costs, creatives...</p>
+        </div>
+    </div>
+
+    <!-- Live Feed Sidebar -->
+    <div class="live-feed-sidebar">
+        <div class="live-feed-header">
+            <h2>📡 Live Activity Feed</h2>
+            <div class="live-feed-subtitle">Real-time updates</div>
+        </div>
+        <div class="live-feed-content" id="liveFeed">
+            <div class="feed-event">
+                <div class="feed-timestamp">Loading...</div>
+                <div class="feed-message">Connecting to live feed...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadLiveFeed() {
+            try {
+                const res = await fetch('./live-feed.json?t=' + Date.now());
+                const data = await res.json();
+                renderLiveFeed(data.events || []);
+            } catch (err) {
+                console.error('Failed to load live feed:', err);
+            }
+        }
+        
+        function renderLiveFeed(events) {
+            const feed = document.getElementById('liveFeed');
+            if (!events || events.length === 0) {
+                feed.innerHTML = '<div class="feed-event"><div class="feed-message">No activity yet</div></div>';
+                return;
+            }
+            
+            feed.innerHTML = events.map(event => {
+                const time = new Date(event.timestamp).toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+                
+                const sourceClass = event.source || 'system';
+                const sourceLabel = event.source === 'user' ? (event.from || 'User') : 
+                                   event.source === 'bot' ? 'Bolt' :
+                                   event.source === 'agent' ? (event.agent || 'Agent') :
+                                   'System';
+                
+                return `
+                    <div class="feed-event ${event.type}">
+                        <div class="feed-timestamp">${time}</div>
+                        <span class="feed-source ${sourceClass}">${sourceLabel}</span>
+                        <div class="feed-message">${event.message || event.action || 'Activity'}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Auto-scroll to top (newest first)
+            feed.scrollTop = 0;
+        }
+        
+        // Load feed on page load
+        loadLiveFeed();
+        
+        // Auto-refresh every 2 seconds
+        setInterval(loadLiveFeed, 2000);
+    </script>
+</body>
+</html>

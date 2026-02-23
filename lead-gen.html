@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Gen Tracker - Bolt's Control Room</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #60a5fa;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #334155;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #60a5fa;
+        }
+
+        .stat-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .filters {
+            background: #1e293b;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        select, input {
+            background: #0f172a;
+            color: #e2e8f0;
+            border: 2px solid #334155;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .table-container {
+            background: #1e293b;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #334155;
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #cbd5e1;
+            border-bottom: 2px solid #475569;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        tbody tr:hover {
+            background: #334155;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .status-not-contacted {
+            background: #475569;
+            color: #e2e8f0;
+        }
+
+        .status-contacted {
+            background: #0ea5e9;
+            color: white;
+        }
+
+        .status-responded {
+            background: #8b5cf6;
+            color: white;
+        }
+
+        .status-interested {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .status-qualified {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-closed {
+            background: #ef4444;
+            color: white;
+        }
+
+        .action-btn {
+            background: #3b82f6;
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        .campaign-badge {
+            background: #1e293b;
+            border: 1px solid #475569;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .export-btn {
+            background: #10b981;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-left: auto;
+        }
+
+        .export-btn:hover {
+            background: #059669;
+        }
+
+        .back-link {
+            display: inline-block;
+            color: #60a5fa;
+            text-decoration: none;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            color: #93c5fd;
+        }
+
+        .email-link {
+            color: #60a5fa;
+            text-decoration: none;
+        }
+
+        .email-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <a href="/index.html" class="back-link">← Back to Control Room</a>
+
+    <div class="header">
+        <h1>🎯 Lead Gen Campaign Tracker</h1>
+        <p>PSEO Visibility Service - Medical Spas & Dentists</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value" id="total-leads">0</div>
+            <div class="stat-label">Total Leads</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="contacted">0</div>
+            <div class="stat-label">Contacted</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="responded">0</div>
+            <div class="stat-label">Responded</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="interested">0</div>
+            <div class="stat-label">Interested</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="qualified">0</div>
+            <div class="stat-label">Qualified</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="conversion-rate">0%</div>
+            <div class="stat-label">Conversion Rate</div>
+        </div>
+    </div>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label>Campaign:</label>
+            <select id="filter-campaign" onchange="filterTable()">
+                <option value="all">All Campaigns</option>
+                <option value="Medical Spas">Medical Spas</option>
+                <option value="Dentists">Dentists</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Status:</label>
+            <select id="filter-status" onchange="filterTable()">
+                <option value="all">All Statuses</option>
+                <option value="Not Contacted">Not Contacted</option>
+                <option value="Contacted">Contacted</option>
+                <option value="Responded">Responded</option>
+                <option value="Interested">Interested</option>
+                <option value="Qualified">Qualified</option>
+                <option value="Closed">Closed</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Search:</label>
+            <input type="text" id="search-input" placeholder="Business name, email..." onkeyup="filterTable()">
+        </div>
+        <button class="export-btn" onclick="exportToCSV()">📊 Export CSV</button>
+    </div>
+
+    <div class="table-container">
+        <table id="leads-table">
+            <thead>
+                <tr>
+                    <th>Campaign</th>
+                    <th>Business Name</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Website</th>
+                    <th>Status</th>
+                    <th>Last Contact</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="leads-tbody">
+                <!-- Leads will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        let leads = [];
+
+        // Load leads from JSON file
+        async function loadLeads() {
+            try {
+                const response = await fetch('/lead-gen-data.json');
+                leads = await response.json();
+                renderTable();
+                updateStats();
+            } catch (error) {
+                console.error('Error loading leads:', error);
+                leads = [];
+                renderTable();
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('leads-tbody');
+            const filteredLeads = getFilteredLeads();
+
+            if (filteredLeads.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: #94a3b8; padding: 3rem;">No leads found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredLeads.map(lead => `
+                <tr>
+                    <td><span class="campaign-badge">${lead.campaign}</span></td>
+                    <td><strong>${lead.businessName || 'N/A'}</strong></td>
+                    <td>${lead.firstName} ${lead.lastName}</td>
+                    <td><a href="mailto:${lead.email}" class="email-link">${lead.email}</a></td>
+                    <td>${lead.website ? `<a href="${lead.website}" target="_blank" class="email-link">${lead.website}</a>` : 'N/A'}</td>
+                    <td><span class="status-badge status-${lead.status.toLowerCase().replace(' ', '-')}">${lead.status}</span></td>
+                    <td>${lead.lastContact || 'Never'}</td>
+                    <td>
+                        <select onchange="updateStatus('${lead.email}', this.value)" style="padding: 0.4rem; font-size: 0.85rem;">
+                            <option value="">Update Status</option>
+                            <option value="Not Contacted">Not Contacted</option>
+                            <option value="Contacted">Contacted</option>
+                            <option value="Responded">Responded</option>
+                            <option value="Interested">Interested</option>
+                            <option value="Qualified">Qualified</option>
+                            <option value="Closed">Closed</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getFilteredLeads() {
+            const campaignFilter = document.getElementById('filter-campaign').value;
+            const statusFilter = document.getElementById('filter-status').value;
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+
+            return leads.filter(lead => {
+                const matchesCampaign = campaignFilter === 'all' || lead.campaign === campaignFilter;
+                const matchesStatus = statusFilter === 'all' || lead.status === statusFilter;
+                const matchesSearch = !searchTerm || 
+                    (lead.businessName && lead.businessName.toLowerCase().includes(searchTerm)) ||
+                    lead.email.toLowerCase().includes(searchTerm) ||
+                    `${lead.firstName} ${lead.lastName}`.toLowerCase().includes(searchTerm);
+
+                return matchesCampaign && matchesStatus && matchesSearch;
+            });
+        }
+
+        function filterTable() {
+            renderTable();
+        }
+
+        function updateStats() {
+            const totalLeads = leads.length;
+            const contacted = leads.filter(l => l.status !== 'Not Contacted').length;
+            const responded = leads.filter(l => l.status === 'Responded' || l.status === 'Interested' || l.status === 'Qualified').length;
+            const interested = leads.filter(l => l.status === 'Interested' || l.status === 'Qualified').length;
+            const qualified = leads.filter(l => l.status === 'Qualified').length;
+            const conversionRate = contacted > 0 ? ((qualified / contacted) * 100).toFixed(1) : 0;
+
+            document.getElementById('total-leads').textContent = totalLeads;
+            document.getElementById('contacted').textContent = contacted;
+            document.getElementById('responded').textContent = responded;
+            document.getElementById('interested').textContent = interested;
+            document.getElementById('qualified').textContent = qualified;
+            document.getElementById('conversion-rate').textContent = conversionRate + '%';
+        }
+
+        async function updateStatus(email, newStatus) {
+            if (!newStatus) return;
+
+            const lead = leads.find(l => l.email === email);
+            if (lead) {
+                lead.status = newStatus;
+                lead.lastContact = new Date().toLocaleDateString();
+                
+                // Save to server
+                try {
+                    await fetch('/api/lead-gen/update', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email, status: newStatus, lastContact: lead.lastContact })
+                    });
+                } catch (error) {
+                    console.error('Error updating lead:', error);
+                }
+
+                renderTable();
+                updateStats();
+            }
+        }
+
+        function exportToCSV() {
+            const csvContent = [
+                ['Campaign', 'Business Name', 'First Name', 'Last Name', 'Email', 'Website', 'Status', 'Last Contact'],
+                ...leads.map(l => [
+                    l.campaign,
+                    l.businessName || '',
+                    l.firstName,
+                    l.lastName,
+                    l.email,
+                    l.website || '',
+                    l.status,
+                    l.lastContact || ''
+                ])
+            ].map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `leads-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        // Initialize
+        loadLeads();
+        setInterval(loadLeads, 10000); // Refresh every 10 seconds
+    </script>
+</body>
+</html>

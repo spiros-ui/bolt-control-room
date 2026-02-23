@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mission Control | AI Operations Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --bg-light: #334155;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+        
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .create-task-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .create-task-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(99, 102, 241, 0.5);
+        }
+        
+        /* Stats Grid */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Section */
+        .section {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+        }
+        .section h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        /* Agents Grid */
+        .agents {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .agent-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 18px;
+            transition: all 0.3s ease;
+        }
+        .agent-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 16px -4px rgba(99, 102, 241, 0.3);
+        }
+        .agent-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .agent-role {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        .agent-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        .agent-status {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .agent-status.active {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        .agent-status.building {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+        .model-switcher {
+            margin-top: 12px;
+        }
+        .model-switcher select {
+            width: 100%;
+            padding: 8px;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        
+        /* Tasks */
+        .tasks {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .task-column h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .task-count {
+            background: var(--primary);
+            color: white;
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-left: 8px;
+        }
+        .task-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            margin-bottom: 10px;
+            transition: all 0.2s ease;
+        }
+        .task-card:hover {
+            border-color: var(--primary);
+        }
+        .task-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .task-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .task-actions select {
+            flex: 1;
+            padding: 6px;
+            font-size: 11px;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+        }
+        .delete-btn {
+            background: var(--error);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+        }
+        
+        /* Creatives */
+        .creatives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .creative-card {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .creative-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+        .creative-card video {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            background: #000;
+        }
+        .creative-info {
+            padding: 16px;
+        }
+        .creative-title {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+        .creative-meta {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Cost Table */
+        .cost-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+        }
+        .cost-table th {
+            background: var(--bg-light);
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .cost-table td {
+            padding: 14px 12px;
+            background: var(--bg-light);
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+        .cost-table tr:hover td {
+            background: var(--bg-card);
+        }
+        
+        /* Live Feed Sidebar */
+        .live-feed-sidebar {
+            width: 380px;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .live-feed-header {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+        }
+        .live-feed-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .live-feed-subtitle {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .live-feed-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        .feed-event {
+            background: var(--bg-light);
+            border-left: 3px solid var(--primary);
+            padding: 12px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .feed-event.chat_message { border-left-color: var(--success); }
+        .feed-event.task_created,
+        .feed-event.task_assigned,
+        .feed-event.task_status_changed { border-left-color: var(--warning); }
+        .feed-event.agent_message { border-left-color: var(--secondary); }
+        .feed-event.video_download { border-left-color: var(--accent); }
+        .feed-event.notification { border-left-color: var(--primary); }
+        .feed-timestamp {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .feed-source {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 10px;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-right: 8px;
+            font-weight: 600;
+        }
+        .feed-source.user { background: var(--success); }
+        .feed-source.bot { background: var(--primary); }
+        .feed-source.agent { background: var(--secondary); }
+        .feed-source.system { background: var(--bg-dark); }
+        .feed-message {
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+        }
+        .modal-header {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            background: var(--bg-light);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+        }
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .main-content { height: 60vh; padding: 16px; }
+            .live-feed-sidebar { 
+                width: 100%; 
+                height: 40vh; 
+                border-left: none; 
+                border-top: 1px solid var(--border); 
+            }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .agents, .tasks, .creatives-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h1>MISSION CONTROL</h1>
+            <button class="create-task-btn" onclick="openCreateTaskModal()">CREATE TASK</button>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card"><div class="stat-value">-</div><div class="stat-label">Total Tasks</div></div>
+            <div class="stat-card"><div class="stat-value">-</div><div class="stat-label">Active Agents</div></div>
+            <div class="stat-card"><div class="stat-value">-</div><div class="stat-label">Completed</div></div>
+            <div class="stat-card"><div class="stat-value">-</div><div class="stat-label">Total Cost</div></div>
+        </div>
+
+        <div class="section">
+            <h2>Active Agents</h2>
+            <div class="agents" id="agents">Loading...</div>
+        </div>
+
+        <div class="section">
+            <h2>Task Pipeline</h2>
+            <div class="tasks" id="tasks">Loading...</div>
+        </div>
+
+        <div class="section">
+            <h2>Creative Assets</h2>
+            <div class="creatives-grid" id="creatives">Loading...</div>
+        </div>
+
+        <div class="section">
+            <h2>Cost Analysis</h2>
+            <table class="cost-table" id="costs">
+                <thead>
+                    <tr>
+                        <th>Agent</th>
+                        <th>Task</th>
+                        <th>Model</th>
+                        <th>Calls</th>
+                        <th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="5" style="text-align: center;">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Live Feed Sidebar -->
+    <div class="live-feed-sidebar">
+        <div class="live-feed-header">
+            <h2>LIVE ACTIVITY FEED</h2>
+            <div class="live-feed-subtitle">Real-time system updates</div>
+        </div>
+        <div class="live-feed-content" id="liveFeed">
+            <div class="feed-event">
+                <div class="feed-timestamp">Initializing...</div>
+                <div class="feed-message">Connecting to live feed...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Task Modal -->
+    <div class="modal" id="createTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">Create New Task</div>
+            <div class="form-group">
+                <label>Task Title</label>
+                <input type="text" id="taskTitle" placeholder="Enter task title">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="taskDescription" placeholder="Enter detailed task description"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Priority Level</label>
+                <select id="taskPriority">
+                    <option value="low">Low Priority</option>
+                    <option value="medium" selected>Medium Priority</option>
+                    <option value="high">High Priority</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeCreateTaskModal()">Cancel</button>
+                <button class="btn-primary" onclick="createTask()">Create Task</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let allAgents = [];
+        let allTasks = [];
+
+        async function loadDashboard() {
+            try {
+                const [tasksRes, costsRes] = await Promise.all([
+                    fetch('./tasks.json?t=' + Date.now()),
+                    fetch('./cost-tracking-data.json?t=' + Date.now())
+                ]);
+                
+                const tasksData = await tasksRes.json();
+                const costsData = await costsRes.json();
+                
+                allTasks = tasksData.tasks || [];
+                allAgents = costsData.agents || [];
+                
+                renderStats(allTasks, costsData);
+                renderAgents(allAgents);
+                renderTasks(allTasks);
+                renderCreatives();
+                renderCosts(costsData);
+                
+            } catch (error) {
+                console.error('Dashboard load error:', error);
+            }
+        }
+        
+        function renderStats(tasks, costsData) {
+            const activeAgents = new Set(tasks.map(t => t.assignedAgent).filter(Boolean)).size;
+            const completedTasks = tasks.filter(t => t.status === 'done').length;
+            const totalCost = costsData.totals?.totalCost || 0;
+            
+            document.getElementById('stats').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${tasks.length}</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${activeAgents}</div>
+                    <div class="stat-label">Active Agents</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${completedTasks}</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">$${totalCost.toFixed(2)}</div>
+                    <div class="stat-label">Total Cost</div>
+                </div>
+            `;
+        }
+        
+        function renderAgents(agents) {
+            document.getElementById('agents').innerHTML = agents.map(agent => `
+                <div class="agent-card">
+                    <div class="agent-name">${agent.name}</div>
+                    <div class="agent-role">${agent.fullName}</div>
+                    <div class="agent-meta">
+                        <span>${agent.tasksCompleted || 0} tasks completed</span>
+                        <span class="agent-status ${agent.status}">${agent.status}</span>
+                    </div>
+                    <div class="agent-meta">
+                        <span>Cost: $${(agent.totalCost || 0).toFixed(3)}</span>
+                        <span>${agent.totalCalls || 0} API calls</span>
+                    </div>
+                    <div class="model-switcher">
+                        <select onchange="switchModel(${agent.id}, this.value)">
+                            <optgroup label="Claude 4.x">
+                                <option value="sonnet-4.5" ${agent.model === 'sonnet-4.5' || agent.model === 'sonnet' ? 'selected' : ''}>Sonnet 4.5</option>
+                                <option value="opus-4" ${agent.model === 'opus-4' || agent.model === 'opus' ? 'selected' : ''}>Opus 4</option>
+                                <option value="haiku-4" ${agent.model === 'haiku-4' || agent.model === 'haiku' ? 'selected' : ''}>Haiku 4</option>
+                            </optgroup>
+                            <optgroup label="Claude 3.5">
+                                <option value="sonnet-3.5" ${agent.model === 'sonnet-3.5' ? 'selected' : ''}>Sonnet 3.5</option>
+                                <option value="opus-3.5" ${agent.model === 'opus-3.5' ? 'selected' : ''}>Opus 3.5</option>
+                                <option value="haiku-3.5" ${agent.model === 'haiku-3.5' ? 'selected' : ''}>Haiku 3.5</option>
+                            </optgroup>
+                            <optgroup label="Specialized">
+                                <option value="claude-code" ${agent.model === 'claude-code' ? 'selected' : ''}>Claude Code</option>
+                            </optgroup>
+                            <optgroup label="Video AI">
+                                <option value="runway-veo" ${agent.model === 'runway-veo' || agent.model === 'runway' ? 'selected' : ''}>Runway Veo 3.1</option>
+                                <option value="runway-gen4" ${agent.model === 'runway-gen4' ? 'selected' : ''}>Runway Gen 4.5</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderTasks(tasks) {
+            const columns = {
+                inbox: tasks.filter(t => t.status === 'inbox'),
+                assigned: tasks.filter(t => t.status === 'assigned'),
+                'in-progress': tasks.filter(t => t.status === 'in-progress' || t.status === 'in_progress'),
+                done: tasks.filter(t => t.status === 'done')
+            };
+            
+            const columnTitles = {
+                inbox: 'INBOX',
+                assigned: 'ASSIGNED',
+                'in-progress': 'IN PROGRESS',
+                done: 'COMPLETED'
+            };
+            
+            document.getElementById('tasks').innerHTML = Object.keys(columns).map(status => `
+                <div class="task-column">
+                    <h3>${columnTitles[status]} <span class="task-count">${columns[status].length}</span></h3>
+                    ${columns[status].map(task => `
+                        <div class="task-card">
+                            <div class="task-title">${task.title}</div>
+                            ${task.description ? `<div class="task-desc">${task.description.substring(0, 100)}${task.description.length > 100 ? '...' : ''}</div>` : ''}
+                            <div class="task-actions">
+                                <select onchange="assignAgent('${task.id}', this.value)">
+                                    <option value="">Assign Agent</option>
+                                    ${allAgents.map(a => `
+                                        <option value="${a.name}" ${task.assignedAgent === a.name ? 'selected' : ''}>
+                                            ${a.name}
+                                        </option>
+                                    `).join('')}
+                                </select>
+                                <button class="delete-btn" onclick="deleteTask('${task.id}')">DELETE</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `).join('');
+        }
+        
+        function renderCreatives() {
+            const videos = [
+                { name: 'Maldives 40sec', file: 'maldives-promo-40sec.mp4', size: '44MB', date: '2026-02-20' },
+                { name: 'Maldives 90sec', file: 'maldives-90sec-final.mp4', size: '17MB', date: '2026-02-20' },
+                { name: 'Maldives 22 Clips', file: 'maldives-22-clips-final.mp4', size: '11MB', date: '2026-02-20' },
+                { name: 'ClickThrive Promo', file: 'clickthrive-promo.mp4', size: '9.1MB', date: '2026-02-19' }
+            ];
+            
+            document.getElementById('creatives').innerHTML = videos.map(v => `
+                <div class="creative-card">
+                    <video src="./videos/${v.file}" controls></video>
+                    <div class="creative-info">
+                        <div class="creative-title">${v.name}</div>
+                        <div class="creative-meta">${v.size} • Generated ${v.date}</div>
+                        <a href="./videos/${v.file}" download="${v.file}">
+                            <button class="download-btn">DOWNLOAD ASSET</button>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderCosts(costsData) {
+            if (!costsData.usage || costsData.usage.length === 0) {
+                document.getElementById('costs').innerHTML = '<tbody><tr><td colspan="5" style="text-align: center;">No cost data available</td></tr></tbody>';
+                return;
+            }
+            
+            document.getElementById('costs').innerHTML = `
+                <thead>
+                    <tr>
+                        <th>Agent</th>
+                        <th>Task</th>
+                        <th>Model</th>
+                        <th>Calls</th>
+                        <th>Cost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${costsData.usage.map(u => `
+                        <tr>
+                            <td>${u.agent}</td>
+                            <td>${u.task}</td>
+                            <td>${u.model}</td>
+                            <td>${u.calls}</td>
+                            <td style="color: var(--primary); font-weight: 600;">$${u.cost.toFixed(3)}</td>
+                        </tr>
+                    `).join('')}
+                    <tr style="background: var(--bg-card); font-weight: 600;">
+                        <td colspan="3">TOTAL OPERATIONAL COST</td>
+                        <td>${costsData.totals.totalCalls}</td>
+                        <td style="color: var(--primary);">$${costsData.totals.totalCost.toFixed(2)}</td>
+                    </tr>
+                </tbody>
+            `;
+        }
+        
+        async function loadLiveFeed() {
+            try {
+                const res = await fetch('./live-feed.json?t=' + Date.now());
+                const data = await res.json();
+                renderLiveFeed(data.events || []);
+            } catch (err) {
+                console.error('Live feed load error:', err);
+            }
+        }
+        
+        function renderLiveFeed(events) {
+            const feed = document.getElementById('liveFeed');
+            if (!events || events.length === 0) {
+                feed.innerHTML = '<div class="feed-event"><div class="feed-message">No activity logged</div></div>';
+                return;
+            }
+            
+            feed.innerHTML = events.map(event => {
+                const time = new Date(event.timestamp).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                const sourceClass = event.source || 'system';
+                const sourceLabel = event.source === 'user' ? (event.from || 'USER') : 
+                                   event.source === 'bot' ? 'BOLT' :
+                                   event.source === 'agent' ? (event.agent || 'AGENT') :
+                                   'SYSTEM';
+                
+                return `
+                    <div class="feed-event ${event.type}">
+                        <div class="feed-timestamp">${time}</div>
+                        <span class="feed-source ${sourceClass}">${sourceLabel}</span>
+                        <div class="feed-message">${event.message || event.action || 'Activity logged'}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            feed.scrollTop = 0;
+        }
+        
+        function openCreateTaskModal() {
+            document.getElementById('createTaskModal').classList.add('active');
+        }
+        
+        function closeCreateTaskModal() {
+            document.getElementById('createTaskModal').classList.remove('active');
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('taskDescription').value = '';
+            document.getElementById('taskPriority').value = 'medium';
+        }
+        
+        async function createTask() {
+            const title = document.getElementById('taskTitle').value.trim();
+            const description = document.getElementById('taskDescription').value.trim();
+            const priority = document.getElementById('taskPriority').value;
+            
+            if (!title) {
+                alert('Task title is required');
+                return;
+            }
+            
+            try {
+                const res = await fetch('./api/tasks', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, description, priority, tags: [], recurring: false })
+                });
+                
+                if (res.ok) {
+                    closeCreateTaskModal();
+                    loadDashboard();
+                } else {
+                    alert('Task creation failed');
+                }
+            } catch (error) {
+                console.error('Create task error:', error);
+                alert('Task creation failed');
+            }
+        }
+        
+        async function assignAgent(taskId, agentName) {
+            if (!agentName) return;
+            
+            try {
+                const res = await fetch(`./api/tasks/${taskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ assignedAgent: agentName })
+                });
+                
+                if (res.ok) loadDashboard();
+            } catch (error) {
+                console.error('Assign agent error:', error);
+            }
+        }
+        
+        async function deleteTask(taskId) {
+            if (!confirm('Delete this task?')) return;
+            
+            try {
+                const res = await fetch(`./api/tasks/${taskId}`, { method: 'DELETE' });
+                if (res.ok) loadDashboard();
+            } catch (error) {
+                console.error('Delete task error:', error);
+            }
+        }
+        
+        async function switchModel(agentId, model) {
+            try {
+                const res = await fetch('./api/agent-model', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ agentId, model })
+                });
+                
+                if (res.ok) {
+                    loadDashboard();
+                } else {
+                    alert('Model switch failed');
+                }
+            } catch (error) {
+                console.error('Switch model error:', error);
+            }
+        }
+        
+        // Initialize
+        loadDashboard();
+        loadLiveFeed();
+        
+        // Auto-refresh
+        setInterval(loadDashboard, 30000);
+        setInterval(loadLiveFeed, 2000);
+    </script>
+</body>
+</html>

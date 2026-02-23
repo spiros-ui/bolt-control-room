@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assets Gallery | Creative Designer</title>
+    <script src="auth.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            margin-left: 20px;
+        }
+        .nav a:hover { text-decoration: underline; }
+        
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .tab-btn {
+            background: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s;
+            color: #6b7280;
+        }
+        .tab-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .tab-btn.active {
+            background: #667eea;
+            color: white;
+        }
+        
+        /* Stats */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .stat-label {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        /* Tab content */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Gallery */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        .asset-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .asset-card:hover {
+            transform: translateY(-5px);
+        }
+        .asset-preview {
+            width: 100%;
+            height: 250px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        .asset-preview video,
+        .asset-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .asset-info {
+            padding: 20px;
+        }
+        .asset-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+        .asset-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .meta-item {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .meta-label {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+        }
+        .tag {
+            background: #f3f4f6;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            color: #667eea;
+            font-weight: 500;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        .empty-text {
+            font-size: 18px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎨 Assets Gallery</h1>
+            <div class="nav">
+                <a href="index.html">← Mission Control</a>
+                <a href="cost-tracking.html">💰 Cost Tracking</a>
+                <a href="executive-summary.html">📊 Summary</a>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('videos')">🎬 Videos (4)</button>
+            <button class="tab-btn" onclick="switchTab('images')">🖼️ Images (0)</button>
+            <button class="tab-btn" onclick="switchTab('tasks')">✅ Completed Tasks (<span id="tasks-count">0</span>)</button>
+            <button class="tab-btn" onclick="switchTab('all')">📂 All Assets (4)</button>
+        </div>
+
+        <div id="videos-stats" class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Videos</div>
+                <div class="stat-value">4</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Duration</div>
+                <div class="stat-value">2m 20s</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Video Cost</div>
+                <div class="stat-value">$2.80</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Scenes Generated</div>
+                <div class="stat-value">35</div>
+            </div>
+        </div>
+
+        <div id="images-stats" class="stats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-label">Total Images</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Formats</div>
+                <div class="stat-value">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Image Cost</div>
+                <div class="stat-value">$0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Size</div>
+                <div class="stat-value">0 MB</div>
+            </div>
+        </div>
+
+        <div id="tasks-stats" class="stats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-label">Completed Tasks</div>
+                <div class="stat-value" id="completed-tasks-count">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Success Rate</div>
+                <div class="stat-value" id="success-rate">100%</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Agents Used</div>
+                <div class="stat-value" id="agents-used">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg. Time</div>
+                <div class="stat-value" id="avg-time">7s</div>
+            </div>
+        </div>
+
+        <div id="all-stats" class="stats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-label">Total Assets</div>
+                <div class="stat-value">2</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Videos</div>
+                <div class="stat-value">2</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Images</div>
+                <div class="stat-value">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Total Cost</div>
+                <div class="stat-value">$1.04</div>
+            </div>
+        </div>
+
+        <!-- Videos Tab -->
+        <div id="videos-content" class="tab-content active">
+            <div class="gallery">
+                <div class="asset-card">
+                    <div class="asset-preview">
+                        <video controls preload="metadata">
+                            <source src="videos/clickthrive-promo.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="asset-info">
+                        <div class="asset-title">ClickThrive Marketing 20-Second Promo</div>
+                        <div class="asset-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Duration:</span> 20 seconds
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Resolution:</span> 1280x720
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Cost:</span> $0.40
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Clips:</span> 5 scenes
+                            </div>
+                        </div>
+                        <div class="tags">
+                            <span class="tag">ClickThrive</span>
+                            <span class="tag">Marketing</span>
+                            <span class="tag">Promotional</span>
+                            <span class="tag">Runway AI</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="asset-card">
+                    <div class="asset-preview">
+                        <video controls preload="metadata">
+                            <source src="maldives-32sec.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="asset-info">
+                        <div class="asset-title">Maldives 32-Second Promotional Video</div>
+                        <div class="asset-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Duration:</span> 32 seconds
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Resolution:</span> 1280x720
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Cost:</span> $0.64
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Clips:</span> 8 scenes
+                            </div>
+                        </div>
+                        <div class="tags">
+                            <span class="tag">GlobeHunters</span>
+                            <span class="tag">Maldives</span>
+                            <span class="tag">Promotional</span>
+                            <span class="tag">Runway AI</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="asset-card">
+                    <div class="asset-preview">
+                        <video controls preload="metadata">
+                            <source src="videos/maldives-promo-40sec.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="asset-info">
+                        <div class="asset-title">🆕 Maldives 40-Second GlobeHunters Promo</div>
+                        <div class="asset-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Duration:</span> 40 seconds
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Resolution:</span> 1280x720
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Cost:</span> $0.80
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Clips:</span> 10 stunning scenes
+                            </div>
+                        </div>
+                        <div class="tags">
+                            <span class="tag">🆕 NEW</span>
+                            <span class="tag">GlobeHunters</span>
+                            <span class="tag">Maldives</span>
+                            <span class="tag">Luxury Travel</span>
+                            <span class="tag">Runway AI</span>
+                        </div>
+                        <div style="margin-top: 12px; padding: 12px; background: #f0fdf4; border-left: 4px solid #10b981; border-radius: 4px;">
+                            <strong>✅ Generated: Feb 20, 2026</strong><br>
+                            10 premium scenes: Aerial views, luxury villas, beaches, underwater, dining, spa, adventures & more!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="asset-card">
+                    <div class="asset-preview">
+                        <video controls preload="metadata">
+                            <source src="videos/maldives-22-clips-final.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="asset-info">
+                        <div class="asset-title">🔥 Maldives 88-Second Final - 22 Unique Clips</div>
+                        <div class="asset-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Duration:</span> 88 seconds
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Resolution:</span> 640x360
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Cost:</span> $1.76
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Clips:</span> 22 unique scenes
+                            </div>
+                        </div>
+                        <div class="tags">
+                            <span class="tag">🔥 LATEST</span>
+                            <span class="tag">GlobeHunters</span>
+                            <span class="tag">Maldives</span>
+                            <span class="tag">Luxury</span>
+                            <span class="tag">Complete</span>
+                        </div>
+                        <div style="margin-top: 12px; padding: 12px; background: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
+                            <strong>🎥 FINAL VERSION - Feb 20, 2026</strong><br>
+                            22 completely unique AI-generated scenes + ambient music. NO repeating clips. Full promotional video ready for GlobeHunters marketing!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Images Tab -->
+        <div id="images-content" class="tab-content">
+            <div class="empty-state">
+                <div class="empty-icon">🖼️</div>
+                <div class="empty-text">No images generated yet</div>
+                <p style="color: #9ca3af; margin-top: 12px;">Images will appear here when Agent 11 generates them via Runway or other tools</p>
+            </div>
+        </div>
+
+        <!-- Completed Tasks Tab -->
+        <div id="tasks-content" class="tab-content">
+            <div id="tasks-gallery" class="gallery">
+                <!-- Loaded via JS -->
+            </div>
+        </div>
+
+        <!-- All Assets Tab -->
+        <div id="all-content" class="tab-content">
+            <div class="gallery">
+                <div class="asset-card">
+                    <div class="asset-preview">
+                        <video controls preload="metadata">
+                            <source src="videos/clickthrive-promo.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="asset-info">
+                        <div class="asset-title">ClickThrive Marketing 20-Second Promo</div>
+                        <div class="asset-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Type:</span> Video
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Duration:</span> 20 seconds
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Cost:</span> $0.40
+                            </div>
+                        </div>
+                        <div class="tags">
+                            <span class="tag">Video</span>
+                            <span class="tag">ClickThrive</span>
+                            <span class="tag">Marketing</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="asset-card">
+                    <div class="asset-preview">
+                        <video controls preload="metadata">
+                            <source src="maldives-32sec.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="asset-info">
+                        <div class="asset-title">Maldives 32-Second Promotional Video</div>
+                        <div class="asset-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Type:</span> Video
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Duration:</span> 32 seconds
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Cost:</span> $0.64
+                            </div>
+                        </div>
+                        <div class="tags">
+                            <span class="tag">Video</span>
+                            <span class="tag">GlobeHunters</span>
+                            <span class="tag">Maldives</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="asset-card">
+                    <div class="asset-preview">
+                        <video controls preload="metadata">
+                            <source src="videos/maldives-promo-40sec.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                    <div class="asset-info">
+                        <div class="asset-title">🆕 Maldives 40-Second GlobeHunters Promo</div>
+                        <div class="asset-meta">
+                            <div class="meta-item">
+                                <span class="meta-label">Type:</span> Video
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Duration:</span> 40 seconds
+                            </div>
+                            <div class="meta-item">
+                                <span class="meta-label">Cost:</span> $0.80
+                            </div>
+                        </div>
+                        <div class="tags">
+                            <span class="tag">🆕 NEW</span>
+                            <span class="tag">Video</span>
+                            <span class="tag">GlobeHunters</span>
+                            <span class="tag">Maldives</span>
+                            <span class="tag">Luxury</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '138.68.161.145' 
+            ? 'http://138.68.161.145:8086/api' 
+            : '/api';
+
+        function switchTab(tab) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.stats').forEach(el => el.style.display = 'none');
+            
+            // Show selected tab
+            document.getElementById(tab + '-content').classList.add('active');
+            document.getElementById(tab + '-stats').style.display = 'grid';
+            event.target.classList.add('active');
+        }
+
+        // Load completed tasks
+        async function loadCompletedTasks() {
+            try {
+                const response = await fetch(`${API_BASE}/tasks`);
+                const tasks = await response.json();
+                
+                const completedTasks = tasks.filter(t => t.status === 'done');
+                
+                // Update count
+                document.getElementById('tasks-count').textContent = completedTasks.length;
+                document.getElementById('completed-tasks-count').textContent = completedTasks.length;
+                
+                // Update unique agents
+                const uniqueAgents = new Set(completedTasks.map(t => t.assignedAgent).filter(Boolean));
+                document.getElementById('agents-used').textContent = uniqueAgents.size;
+                
+                // Render tasks
+                const gallery = document.getElementById('tasks-gallery');
+                
+                if (completedTasks.length === 0) {
+                    gallery.innerHTML = `
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="empty-icon">✅</div>
+                            <div class="empty-text">No completed tasks yet</div>
+                            <p style="color: #9ca3af; margin-top: 12px;">Completed tasks will appear here when agents finish their work</p>
+                        </div>
+                    `;
+                } else {
+                    gallery.innerHTML = completedTasks.map(task => {
+                        const completedDate = new Date(task.updatedAt);
+                        const duration = task.updatedAt && task.createdAt 
+                            ? Math.round((new Date(task.updatedAt) - new Date(task.createdAt)) / 1000) 
+                            : 0;
+                        
+                        return `
+                            <div class="asset-card">
+                                <div class="asset-preview" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white; font-size: 64px;">
+                                    ✅
+                                </div>
+                                <div class="asset-info">
+                                    <div class="asset-title">${task.title}</div>
+                                    ${task.description ? `<p style="color: #6b7280; font-size: 14px; margin-bottom: 12px;">${task.description}</p>` : ''}
+                                    <div class="asset-meta">
+                                        <div class="meta-item">
+                                            <span class="meta-label">Agent:</span> ${task.assignedAgent || 'Unknown'}
+                                        </div>
+                                        <div class="meta-item">
+                                            <span class="meta-label">Completed:</span> ${completedDate.toLocaleString()}
+                                        </div>
+                                        <div class="meta-item">
+                                            <span class="meta-label">Duration:</span> ${duration}s
+                                        </div>
+                                        <div class="meta-item">
+                                            <span class="meta-label">Priority:</span> ${task.priority || 'normal'}
+                                        </div>
+                                    </div>
+                                    <div class="tags">
+                                        <span class="tag">${task.status}</span>
+                                        <span class="tag">${task.priority || 'normal'}</span>
+                                        ${task.assignedAgent ? `<span class="tag">${task.assignedAgent}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+                
+            } catch (error) {
+                console.error('Error loading completed tasks:', error);
+            }
+        }
+
+        // Initialize
+        loadCompletedTasks();
+        
+        // Auto-refresh every 5 seconds
+        setInterval(loadCompletedTasks, 5000);
+    </script>
+</body>
+</html>

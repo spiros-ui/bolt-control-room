@@ -1,0 +1,457 @@
+{
+  "events": [
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "YouTube Agent",
+      "action": "video_uploaded",
+      "message": "🎬 OpenClaw Installation Tutorial uploaded! 2min 11sec, 19 AI clips + 6 text slides, with music + captions",
+      "timestamp": "2026-02-23T05:09:21.942Z",
+      "id": 1771823361942.2937
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "Video Wizard",
+      "action": "production_started",
+      "message": "🎬 Generating 25 AI video clips for OpenClaw tutorial - Est. 30-40 min - Cost: $2.00",
+      "timestamp": "2026-02-22T21:28:29.732Z",
+      "id": 1771795709737.5051
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "Bolt",
+      "action": "knowledge_centre_updated",
+      "message": "📚 Knowledge Centre updated - Added Video Production Pipeline guide",
+      "timestamp": "2026-02-22T21:28:29.737Z",
+      "id": 1771795709738.6663
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "Bolt",
+      "action": "cron_configured",
+      "message": "📅 Daily video schedule configured - 2 videos/day at 10 AM and 1 PM Greek time",
+      "timestamp": "2026-02-22T21:28:29.738Z",
+      "id": 1771795709738.936
+    },
+    {
+      "type": "chat_message",
+      "source": "user",
+      "from": "Spiros",
+      "message": "why the live activity feed is not showing anything of what we are discussing",
+      "channel": "whatsapp",
+      "timestamp": "2026-02-22T21:28:29.738Z",
+      "id": 1771795709738.3945
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "Bolt",
+      "action": "system_fix",
+      "message": "🔧 chat-logger.js restarted - WhatsApp conversations now logging to live feed",
+      "timestamp": "2026-02-22T21:28:29.738Z",
+      "id": 1771795709739.0437
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "YouTube Agent",
+      "action": "video_uploaded",
+      "message": "Test video uploaded successfully - Video ID: -ghF8zhDVsQ - Status: unlisted",
+      "timestamp": "2026-02-21T17:39:59.700Z",
+      "id": 1771695599700.0298
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "YouTube Agent",
+      "action": "authenticated",
+      "message": "YouTube API connected successfully - Channel: Bolt The A.I Tester - Ready to upload videos",
+      "timestamp": "2026-02-21T17:31:31.370Z",
+      "id": 1771695091371.7566
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "YouTube Agent",
+      "action": "auth_started",
+      "message": "OAuth authentication flow initiated - waiting for user authorization",
+      "timestamp": "2026-02-21T17:24:35.581Z",
+      "id": 1771694675584.9758
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "landing_page_deployed",
+      "message": "YouTube landing page deployed at http://138.68.161.145:8086/youtube-landing.html - newsletter signup + Calendly integration live",
+      "timestamp": "2026-02-21T16:42:03.035Z",
+      "id": 1771692123036.1997
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "youtube_agent_planned",
+      "message": "Agent 13: YouTube Agent specifications sent via email - Daily AI Tips (10 AM) + News Summaries (11 AM)",
+      "timestamp": "2026-02-21T16:02:21.504Z",
+      "id": 1771689741507.6375
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "refreshed",
+      "message": "Control Room app server restarted and refreshed - all systems operational",
+      "timestamp": "2026-02-21T15:49:51.597Z",
+      "id": 1771688991597.4834
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "app_deployed",
+      "message": "Bolt's Control Room standalone app deployed - accessible at http://138.68.161.145:8086/app.html - installable on mobile and desktop",
+      "timestamp": "2026-02-21T11:37:39.146Z",
+      "id": 1771673859146.1401
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "config_updated",
+      "message": "Daily briefing already includes OpenClaw & Claude Code - priority added for platform developments",
+      "timestamp": "2026-02-21T11:11:46.414Z",
+      "id": 1771672306414.755
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "Bolt",
+      "action": "email_sent",
+      "message": "YouTube TUI guide sent via email with installation & usage instructions for Claude Code and OpenClaw",
+      "timestamp": "2026-02-21T08:13:11.340Z",
+      "id": 1771661591342.2
+    },
+    {
+      "type": "task_deleted",
+      "source": "system",
+      "taskId": "1771532449129-6l2qe7omb",
+      "message": "Task deleted: 1771532449129-6l2qe7omb",
+      "timestamp": "2026-02-20T19:32:27.947Z",
+      "id": 1771615947947.6797
+    },
+    {
+      "agent": "System",
+      "action": "Task deleted",
+      "message": "Deleted: \"Build Agent 1: Google Ads Specialist\"",
+      "taskId": "1771532449129-6l2qe7omb",
+      "timestamp": "2026-02-20T19:32:27.846Z",
+      "id": 1771615947846.317
+    },
+    {
+      "type": "task_deleted",
+      "source": "system",
+      "taskId": "1771532454993-mmfqpjwbr",
+      "message": "Task deleted: 1771532454993-mmfqpjwbr",
+      "timestamp": "2026-02-20T19:32:13.251Z",
+      "id": 1771615933251.8713
+    },
+    {
+      "agent": "System",
+      "action": "Task deleted",
+      "message": "Deleted: \"Build Agent 2: Meta Ads Specialist\"",
+      "taskId": "1771532454993-mmfqpjwbr",
+      "timestamp": "2026-02-20T19:32:13.148Z",
+      "id": 1771615933148.8494
+    },
+    {
+      "type": "task_deleted",
+      "source": "system",
+      "taskId": "1771440968034-we3s9rrcg",
+      "message": "Task deleted: 1771440968034-we3s9rrcg",
+      "timestamp": "2026-02-20T19:32:05.378Z",
+      "id": 1771615925380.7805
+    },
+    {
+      "agent": "System",
+      "action": "Task deleted",
+      "message": "Deleted: \"Test Task from API\"",
+      "taskId": "1771440968034-we3s9rrcg",
+      "timestamp": "2026-02-20T19:32:05.221Z",
+      "id": 1771615925221.4302
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "fixed",
+      "message": "Task Pipeline now shows all 4 columns side-by-side: INBOX, ASSIGNED, IN PROGRESS, COMPLETED",
+      "timestamp": "2026-02-20T19:31:22.858Z",
+      "id": 1771615882859.835
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "renamed",
+      "message": "Dashboard renamed to 'Bolt's Control Room'",
+      "timestamp": "2026-02-20T19:26:25.992Z",
+      "id": 1771615585992.499
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "renamed",
+      "message": "Dashboard renamed to 'Bolt's Mission Control Centre'",
+      "timestamp": "2026-02-20T19:12:53.770Z",
+      "id": 1771614773770.2725
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "deployed",
+      "message": "Corporate AI-themed dashboard redesign complete - dark theme, no emojis, professional UI",
+      "timestamp": "2026-02-20T19:11:37.758Z",
+      "id": 1771614697759.0764
+    },
+    {
+      "type": "chat_message",
+      "source": "user",
+      "from": "Bolt",
+      "message": "✅ Live feed deployed! Real-time notifications active",
+      "channel": "whatsapp",
+      "timestamp": "2026-02-20T19:07:11.978Z",
+      "id": 1771614431978.6963
+    },
+    {
+      "type": "chat_message",
+      "source": "user",
+      "from": "Spiros",
+      "message": "we need to ensure that when i make a change to the dashboard you inform me about it here",
+      "channel": "whatsapp",
+      "timestamp": "2026-02-20T19:07:11.928Z",
+      "id": 1771614431928.3943
+    },
+    {
+      "type": "agent_message",
+      "source": "agent",
+      "agent": "System",
+      "action": "deployed",
+      "message": "Live feed sidebar deployed with real-time updates",
+      "timestamp": "2026-02-20T19:07:11.888Z",
+      "id": 1771614431889.8123
+    },
+    {
+      "type": "chat_message",
+      "source": "user",
+      "from": "Bolt",
+      "message": "Building real-time notifications + live feed sidebar now",
+      "channel": "whatsapp",
+      "timestamp": "2026-02-20T19:05:12.303Z",
+      "id": 1771614312304.451
+    },
+    {
+      "type": "chat_message",
+      "source": "user",
+      "from": "Spiros",
+      "message": "we need to ensure that when i make a change to the dashboard you inform me about it here",
+      "channel": "whatsapp",
+      "timestamp": "2026-02-20T19:05:12.259Z",
+      "id": 1771614312262.9702
+    },
+    {
+      "agent": "AdWords Pro",
+      "action": "Task assigned",
+      "message": "Assigned to: \"Build Agent 1: Google Ads Specialist\"",
+      "taskId": "1771532449129-6l2qe7omb",
+      "timestamp": "2026-02-20T19:02:06.898Z",
+      "id": 1771614126898.1392
+    },
+    {
+      "agent": "System",
+      "action": "Model switch warning",
+      "message": "Model updated in config but cron job update failed for News Scout",
+      "timestamp": "2026-02-20T18:42:37.018Z",
+      "id": 1771612957018.679
+    },
+    {
+      "agent": "System",
+      "action": "Model switch warning",
+      "message": "Model updated in config but cron job update failed for News Scout",
+      "timestamp": "2026-02-20T18:41:13.676Z",
+      "id": 1771612873676.244
+    },
+    {
+      "agent": "Video Wizard",
+      "action": "Status: done",
+      "message": "\"create a video of 20 seconds promoting clickthrivemarketing\" → done (100%)",
+      "taskId": "1771532956678-s60nyoo8q",
+      "timestamp": "2026-02-19T20:45:10.982Z",
+      "id": 1771533910982.097
+    },
+    {
+      "agent": "Video Wizard",
+      "action": "Status: in-progress",
+      "message": "\"create a video of 20 seconds promoting clickthrivemarketing\" → in-progress (10%)",
+      "taskId": "1771532956678-s60nyoo8q",
+      "timestamp": "2026-02-19T20:41:09.509Z",
+      "id": 1771533669509.994
+    },
+    {
+      "agent": "Video Wizard",
+      "action": "Status: assigned",
+      "message": "\"create a video of 20 seconds promoting clickthrivemarketing\" → assigned ",
+      "taskId": "1771532956678-s60nyoo8q",
+      "timestamp": "2026-02-19T20:41:05.861Z",
+      "id": 1771533665861.2039
+    },
+    {
+      "agent": "Video Wizard",
+      "action": "Task assigned",
+      "message": "Assigned to: \"create a video of 20 seconds promoting clickthrivemarketing\"",
+      "taskId": "1771532956678-s60nyoo8q",
+      "timestamp": "2026-02-19T20:41:05.859Z",
+      "id": 1771533665859.3447
+    },
+    {
+      "agent": "System",
+      "action": "Task created",
+      "message": "New task: \"create a video of 20 seconds promoting clickthrivemarketing\"",
+      "taskId": "1771532956678-s60nyoo8q",
+      "timestamp": "2026-02-19T20:29:16.679Z",
+      "id": 1771532956679.0576
+    },
+    {
+      "agent": "System",
+      "action": "Task created",
+      "message": "New task: \"Build Agent 2: Meta Ads Specialist\"",
+      "taskId": "1771532454993-mmfqpjwbr",
+      "timestamp": "2026-02-19T20:20:54.993Z",
+      "id": 1771532454993.8147
+    },
+    {
+      "agent": "System",
+      "action": "Task created",
+      "message": "New task: \"Build Agent 1: Google Ads Specialist\"",
+      "taskId": "1771532449129-6l2qe7omb",
+      "timestamp": "2026-02-19T20:20:49.130Z",
+      "id": 1771532449130.564
+    },
+    {
+      "id": "2026-02-19T18:49:00",
+      "timestamp": "2026-02-19T18:49:00.000Z",
+      "type": "agent-action",
+      "agent": "Bolt",
+      "action": "Agent 4 (Twitter) removed from scope",
+      "details": "Twitter API requires $200/month - agent removed, focusing on revenue generators",
+      "message": "Agent 4 (Twitter) removed from scope: Twitter API requires $200/month - agent removed, focusing on revenue generators"
+    },
+    {
+      "id": "2026-02-19T18:45:00",
+      "timestamp": "2026-02-19T18:45:00.000Z",
+      "type": "agent-communication",
+      "fromAgent": "Bolt",
+      "toAgent": "Spiros",
+      "message": "Mission Control dashboard updates requested - live feed, video playback, executive summary",
+      "communicationType": "message",
+      "agent": "Bolt"
+    },
+    {
+      "id": "2026-02-19T08:05:08",
+      "timestamp": "2026-02-19T08:05:08.444Z",
+      "type": "agent-action",
+      "agent": "Lead Gen Machine (Agent 3)",
+      "action": "Service Pivoted to PSEO",
+      "details": "Switched from Google Ads to LLM visibility offering - 30 articles/day, AI readiness quiz",
+      "message": "Service Pivoted to PSEO: Switched from Google Ads to LLM visibility offering - 30 articles/day, AI readiness quiz"
+    },
+    {
+      "id": "2026-02-19T07:42:48",
+      "timestamp": "2026-02-19T07:42:48.932Z",
+      "type": "agent-action",
+      "agent": "Lead Gen Machine (Agent 3)",
+      "action": "5 Campaigns Launched",
+      "details": "Miami Beach, Coral Gables, Brickell, Aventura, Coconut Grove - all emails sent with CC to Spiros",
+      "message": "5 Campaigns Launched: Miami Beach, Coral Gables, Brickell, Aventura, Coconut Grove - mockups deployed to Surge"
+    },
+    {
+      "id": "2026-02-19T07:18:00",
+      "timestamp": "2026-02-19T07:18:31.781Z",
+      "type": "agent-communication",
+      "fromAgent": "Lead Gen Machine (Agent 3)",
+      "toAgent": "Bolt",
+      "message": "Mockup deployment fixed - all URLs now public on Surge instead of localhost",
+      "communicationType": "message",
+      "agent": "Lead Gen Machine (Agent 3)"
+    },
+    {
+      "id": "2026-02-19T07:13:52",
+      "timestamp": "2026-02-19T07:13:52.344Z",
+      "type": "agent-action",
+      "agent": "Lead Gen Machine (Agent 3)",
+      "action": "First Prospect Added",
+      "details": "Miami Smile Dental - mockup generated, email sent, tracking in CRM",
+      "message": "First Prospect Added: Miami Smile Dental - mockup at miami-smile-dental-clickthrive.surge.sh"
+    },
+    {
+      "id": "2026-02-19T06:56:00",
+      "timestamp": "2026-02-19T06:56:00.000Z",
+      "type": "agent-action",
+      "agent": "Creative Designer (Agent 11)",
+      "action": "32-Second Maldives Video Complete",
+      "details": "Generated 8x4-second clips, combined with ffmpeg, compressed for WhatsApp delivery",
+      "message": "32-Second Maldives Video Complete: 8 scenes generated via Runway, combined and compressed to 5.8MB"
+    },
+    {
+      "id": "2026-02-19T06:33:16",
+      "timestamp": "2026-02-19T06:33:16.901Z",
+      "type": "agent-action",
+      "agent": "AI News Researcher (Agent 5)",
+      "action": "Scraped 12 stories",
+      "details": "OpenClaw v2.7 release, Claude 4.6 updates, Runway API improvements",
+      "message": "Scraped 12 stories: OpenClaw v2.7 release, Claude 4.6 updates, Runway API improvements"
+    },
+    {
+      "id": "2026-02-19T04:53:00",
+      "timestamp": "2026-02-19T04:53:00.000Z",
+      "type": "agent-communication",
+      "fromAgent": "Lead Gen Machine (Agent 3)",
+      "toAgent": "Email Automation (Agent 7)",
+      "message": "3 qualified Florida leads identified - need 3-email nurture sequence",
+      "communicationType": "message",
+      "agent": "Lead Gen Machine (Agent 3)"
+    },
+    {
+      "id": "2026-02-19T04:50:00",
+      "timestamp": "2026-02-19T04:50:00.000Z",
+      "type": "agent-action",
+      "agent": "AI News Researcher (Agent 5)",
+      "action": "Dashboard Deployed",
+      "details": "Running on port 8087, 7 AM briefing scheduled, WhatsApp notifications enabled",
+      "message": "Dashboard Deployed: http://138.68.161.145:8087/dashboard.html - briefing at 7 AM Greek time"
+    },
+    {
+      "id": "2026-02-18T22:28:18",
+      "timestamp": "2026-02-18T22:28:18.723Z",
+      "type": "agent-action",
+      "agent": "Bolt",
+      "action": "Task Execution System Connected",
+      "details": "Mission Control now tracks agent progress in real-time",
+      "message": "Task Execution System Connected: Agents report progress every 5 seconds"
+    },
+    {
+      "id": "2026-02-18T22:28:05",
+      "timestamp": "2026-02-18T22:28:05.361Z",
+      "type": "agent-action",
+      "agent": "Creative Designer (Agent 11)",
+      "action": "First Video Generated",
+      "details": "Runway veo3.1_fast - Spa interior scene, 4 seconds, $0.08 cost",
+      "message": "First Video Generated: test-video-spa.mp4 via Runway API"
+    }
+  ]
+}
