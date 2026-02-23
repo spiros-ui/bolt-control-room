@@ -10,7 +10,7 @@ const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
 
-const PORT = 8086;
+const PORT = process.env.PORT || 8086;
 const TASKS_FILE = path.join(__dirname, 'tasks.json');
 const LIVE_FEED_FILE = path.join(__dirname, 'live-feed.json');
 const COST_DATA_FILE = path.join(__dirname, 'cost-tracking-data.json');
