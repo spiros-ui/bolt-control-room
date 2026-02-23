@@ -9,6 +9,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
+const { checkAuth, sendAuthPage } = require('./auth-middleware');
 
 const PORT = process.env.PORT || 8086;
 const TASKS_FILE = path.join(__dirname, 'tasks.json');
@@ -167,6 +168,14 @@ const server = http.createServer((req, res) => {
     res.writeHead(200);
     res.end();
     return;
+  }
+  
+  // Authentication check for HTML pages (skip for API endpoints and static assets)
+  if (!url.pathname.startsWith('/api/') && !url.pathname.match(/\.(js|css|json|png|jpg|mp4)$/)) {
+    if (!checkAuth(req, res)) {
+      sendAuthPage(res);
+      return;
+    }
   }
   
   // API Routes - Tasks
